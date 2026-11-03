@@ -5,3 +5,7 @@ __pycache__/
 results/programs/*_ref.txt
 results/programs/*_spec.txt
 results/programs/*.txt
+results/video/*.webm
+results/video/frames/
+results/video/contact.png
+results/demo_server.log

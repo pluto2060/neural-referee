@@ -1,12 +1,35 @@
-# Neural Computer Referee
+# Neural Referee
 
 **Neural Computer = Compiled Layers + Neural State + Program Weights + Verifier.**
-Recent work compiles real computers into transformer weights (Percepta transformer-vm, QwenPU).
-They show the machine works by comparing final output with a reference. This project is the missing
-fourth term: a referee that, when such a machine goes wrong, finds **the first wrong step and the
-sublayer that caused it**, without re-running the program.
 
-Built for the Meta Global AI Developer Hackathon (Oct 26 - Nov 4, 2026), Indie track, with Meta's Muse Spark 1.3 (Meta Model API) and open-weights Llama 3.2. All code in this
+Computers are now being compiled straight into transformer weights: a WebAssembly machine (Percepta
+transformer-vm) and a RISC-V CPU inside a 4B open model (QwenPU). Their authors check one thing: does the
+final output match. When a step goes wrong, nobody can say which step, or which part of the model did it.
+
+Neural Referee is the verifier. You ask a question in plain language; Meta's Muse Spark 1.3 (Meta Model
+API) writes the program; the program runs inside a 7-layer transformer whose weights are a computer; the
+referee checks every step and returns either a receipt for the whole trace or the first wrong step and the
+faulty sublayer, which Muse then explains.
+
+What it measured (CPU only, reproducible from this repo):
+- **Faults that weight checks cannot see.** Bit flips in activations or attention memory while the program
+  runs: the referee located 30 of 30; comparing weight files located 0 of 30; an output-only check
+  detected them but located none. Weight corruption: 15 of 15 here, 40 of 40 in two earlier runs.
+- **Hidden errors.** In one run the final answer was right (35) but step 1,909 of 3,107 was computed
+  wrongly in `L1.attn`. Output-only checking passes that run; the referee fails it.
+- **Cheap to check.** About 11 hash comparisons find the first wrong step in a 3,000-step trace; one step
+  is then rechecked layer by layer. No false alarms on four clean programs up to 44,332 steps.
+- **Meta models in the loop.** Muse Spark 1.3 wrote correct programs for 9 of 10 requests on the first try
+  (about 12 s each). A local open-weights Llama 3.2 3B runs the same loop offline (7 of 9).
+
+What it does not claim: Muse is already accurate when it answers exact questions directly (see
+`results/muse_vs_verified.json`); the referee's value is that each answer comes with a checkable receipt
+and that faults in the computer itself are caught and located, including ones that leave the answer
+looking right.
+
+Demo: `python demo/server.py` then open http://127.0.0.1:8765 (see "Run it").
+
+Built for the Meta Global AI Developer Hackathon (Oct 26 - Nov 4, 2026), Indie track. All code in this
 repository is new work from 2026-11-03.
 
 ## Hypothesis H-R
@@ -115,7 +138,9 @@ PYTHONPATH=. $TVM_ROOT/.venv/bin/python experiments/llama_accuracy.py
 - `referee/faults.py` - weight fault injection with the true sublayer recorded
 - `referee/baselines.py` - weight-file diff and output-only baselines
 - `referee/llama_front.py` - Meta model front end (Muse via Meta Model API, or local Llama)
-- `demo/run_demo.py` - request -> program -> neural computer -> referee -> explanation
+- `demo/run_demo.py` - request -> program -> neural computer -> referee -> explanation (CLI)
+- `demo/server.py`, `demo/web/index.html` - one-page web demo
+- `demo/record_video.py` - records the 3-minute demo video from the web demo
 - `experiments/h_r.py` - the H-R test
 - `experiments/baseline_table.py` - referee vs baselines on weight, compute and memory faults
 - `experiments/llama_accuracy.py` - program-writing accuracy of the Meta model front end

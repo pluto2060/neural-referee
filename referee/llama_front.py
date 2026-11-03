@@ -82,7 +82,7 @@ def _chat_meta_api(system, user, max_tokens):
     req = urllib.request.Request(META_API_BASE.rstrip("/") + "/chat/completions", body,
                                  {"Authorization": "Bearer " + os.environ["META_MODEL_API_KEY"],
                                   "Content-Type": "application/json"})
-    with urllib.request.urlopen(req, timeout=120) as r:
+    with urllib.request.urlopen(req, timeout=600) as r:
         d = json.load(r)
     _USAGE.append(d.get("usage", {}))
     return d["choices"][0]["message"]["content"] or ""
