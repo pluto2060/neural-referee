@@ -1,0 +1,437 @@
+{
+ "summary": {
+  "harmful": 10,
+  "benign": 13,
+  "tries": 23,
+  "located_exactly": 10,
+  "pass_rule": ">= 9 of 10 located exactly",
+  "pass": true,
+  "mean_steps_reexecuted_fraction": 0.000318,
+  "mean_prover_seconds": 3.44,
+  "mean_referee_seconds": 0.52
+ },
+ "harmful": [
+  {
+   "true_sublayer": "head",
+   "index": [
+    78,
+    10
+   ],
+   "kind": "exponent",
+   "bit": 56,
+   "old": 100000.0,
+   "new": 6553600000.0,
+   "program": "hello",
+   "try_no": 1,
+   "oracle_first_wrong_step": 529,
+   "referee_first_wrong_step": 529,
+   "referee_sublayer": "head",
+   "step_correct": true,
+   "sublayer_correct": true,
+   "hash_comparisons": 10,
+   "trace_len": 1034,
+   "steps_reexecuted": 1,
+   "prover_seconds": 1.01,
+   "referee_seconds": 0.08,
+   "prover_token": "1e'",
+   "reference_token": "04"
+  },
+  {
+   "true_sublayer": "embed",
+   "index": [
+    45,
+    3
+   ],
+   "kind": "zero",
+   "bit": null,
+   "old": 1.0,
+   "new": 0.0,
+   "program": "addition",
+   "try_no": 7,
+   "oracle_first_wrong_step": 3369,
+   "referee_first_wrong_step": 3369,
+   "referee_sublayer": "embed",
+   "step_correct": true,
+   "sublayer_correct": true,
+   "hash_comparisons": 12,
+   "trace_len": 4362,
+   "steps_reexecuted": 1,
+   "prover_seconds": 2.75,
+   "referee_seconds": 0.52,
+   "prover_token": "ff'",
+   "reference_token": "10'"
+  },
+  {
+   "true_sublayer": "head",
+   "index": [
+    433,
+    29
+   ],
+   "kind": "sign",
+   "bit": 63,
+   "old": -100000.0,
+   "new": 100000.0,
+   "program": "fibonacci",
+   "try_no": 8,
+   "oracle_first_wrong_step": 5077,
+   "referee_first_wrong_step": 5077,
+   "referee_sublayer": "head",
+   "step_correct": true,
+   "sublayer_correct": true,
+   "hash_comparisons": 13,
+   "trace_len": 9037,
+   "steps_reexecuted": 1,
+   "prover_seconds": 4.39,
+   "referee_seconds": 0.84,
+   "prover_token": "b7'",
+   "reference_token": "commit(-2,sts=0,bt=0)"
+  },
+  {
+   "true_sublayer": "head",
+   "index": [
+    471,
+    4
+   ],
+   "kind": "exponent",
+   "bit": 60,
+   "old": 2.0,
+   "new": 2.315841784746324e+77,
+   "program": "addition",
+   "try_no": 13,
+   "oracle_first_wrong_step": 1114,
+   "referee_first_wrong_step": 1114,
+   "referee_sublayer": "head",
+   "step_correct": true,
+   "sublayer_correct": true,
+   "hash_comparisons": 12,
+   "trace_len": 4362,
+   "steps_reexecuted": 1,
+   "prover_seconds": 2.76,
+   "referee_seconds": 0.17,
+   "prover_token": "c8'",
+   "reference_token": "00'"
+  },
+  {
+   "true_sublayer": "embed",
+   "index": [
+    495,
+    3
+   ],
+   "kind": "mantissa_high",
+   "bit": 45,
+   "old": 1.0,
+   "new": 1.0078125,
+   "program": "fibonacci",
+   "try_no": 14,
+   "oracle_first_wrong_step": 5422,
+   "referee_first_wrong_step": 5422,
+   "referee_sublayer": "embed",
+   "step_correct": true,
+   "sublayer_correct": true,
+   "hash_comparisons": 14,
+   "trace_len": 9037,
+   "steps_reexecuted": 1,
+   "prover_seconds": 5.6,
+   "referee_seconds": 0.85,
+   "prover_token": "commit(+0,sts=0,bt=0)",
+   "reference_token": "31"
+  },
+  {
+   "true_sublayer": "L4.ffn",
+   "index": [
+    47,
+    28
+   ],
+   "kind": "zero",
+   "bit": null,
+   "old": 1.0,
+   "new": 0.0,
+   "program": "fibonacci",
+   "try_no": 15,
+   "oracle_first_wrong_step": 5168,
+   "referee_first_wrong_step": 5168,
+   "referee_sublayer": "L4.ffn",
+   "step_correct": true,
+   "sublayer_correct": true,
+   "hash_comparisons": 12,
+   "trace_len": 9037,
+   "steps_reexecuted": 1,
+   "prover_seconds": 3.38,
+   "referee_seconds": 0.81,
+   "prover_token": "00",
+   "reference_token": "10"
+  },
+  {
+   "true_sublayer": "head",
+   "index": [
+    459,
+    19
+   ],
+   "kind": "zero",
+   "bit": null,
+   "old": -100000.0,
+   "new": 0.0,
+   "program": "hello",
+   "try_no": 19,
+   "oracle_first_wrong_step": 559,
+   "referee_first_wrong_step": 559,
+   "referee_sublayer": "head",
+   "step_correct": true,
+   "sublayer_correct": true,
+   "hash_comparisons": 10,
+   "trace_len": 1034,
+   "steps_reexecuted": 1,
+   "prover_seconds": 0.49,
+   "referee_seconds": 0.09,
+   "prover_token": "c2'",
+   "reference_token": "commit(+1,sts=1,bt=0)"
+  },
+  {
+   "true_sublayer": "head",
+   "index": [
+    420,
+    12
+   ],
+   "kind": "sign",
+   "bit": 63,
+   "old": -100000.0,
+   "new": 100000.0,
+   "program": "addition",
+   "try_no": 20,
+   "oracle_first_wrong_step": 949,
+   "referee_first_wrong_step": 949,
+   "referee_sublayer": "head",
+   "step_correct": true,
+   "sublayer_correct": true,
+   "hash_comparisons": 12,
+   "trace_len": 4362,
+   "steps_reexecuted": 1,
+   "prover_seconds": 2.74,
+   "referee_seconds": 0.15,
+   "prover_token": "b1",
+   "reference_token": "00"
+  },
+  {
+   "true_sublayer": "head",
+   "index": [
+    427,
+    19
+   ],
+   "kind": "exponent",
+   "bit": 53,
+   "old": -100000.0,
+   "new": -25000.0,
+   "program": "fibonacci",
+   "try_no": 21,
+   "oracle_first_wrong_step": 5236,
+   "referee_first_wrong_step": 5236,
+   "referee_sublayer": "head",
+   "step_correct": true,
+   "sublayer_correct": true,
+   "hash_comparisons": 14,
+   "trace_len": 9037,
+   "steps_reexecuted": 1,
+   "prover_seconds": 5.7,
+   "referee_seconds": 0.83,
+   "prover_token": "b4'",
+   "reference_token": "commit(+1,sts=1,bt=0)"
+  },
+  {
+   "true_sublayer": "head",
+   "index": [
+    423,
+    19
+   ],
+   "kind": "zero",
+   "bit": null,
+   "old": -100000.0,
+   "new": 0.0,
+   "program": "fibonacci",
+   "try_no": 23,
+   "oracle_first_wrong_step": 5236,
+   "referee_first_wrong_step": 5236,
+   "referee_sublayer": "head",
+   "step_correct": true,
+   "sublayer_correct": true,
+   "hash_comparisons": 14,
+   "trace_len": 9037,
+   "steps_reexecuted": 1,
+   "prover_seconds": 5.59,
+   "referee_seconds": 0.82,
+   "prover_token": "b2'",
+   "reference_token": "commit(+1,sts=1,bt=0)"
+  }
+ ],
+ "benign": [
+  {
+   "true_sublayer": "head",
+   "index": [
+    497,
+    7
+   ],
+   "kind": "mantissa_high",
+   "bit": 51,
+   "old": -100000.0,
+   "new": -67232.0,
+   "program": "hello",
+   "try_no": 2
+  },
+  {
+   "true_sublayer": "L6.ffn",
+   "index": [
+    6,
+    10
+   ],
+   "kind": "zero",
+   "bit": null,
+   "old": -1.0,
+   "new": 0.0,
+   "program": "fibonacci",
+   "try_no": 3
+  },
+  {
+   "true_sublayer": "head",
+   "index": [
+    442,
+    10
+   ],
+   "kind": "sign",
+   "bit": 63,
+   "old": 100000.0,
+   "new": -100000.0,
+   "program": "hello",
+   "try_no": 4
+  },
+  {
+   "true_sublayer": "head",
+   "index": [
+    18,
+    19
+   ],
+   "kind": "exponent",
+   "bit": 59,
+   "old": -100000.0,
+   "new": -3.4028236692093846e+43,
+   "program": "addition",
+   "try_no": 5
+  },
+  {
+   "true_sublayer": "head",
+   "index": [
+    243,
+    3
+   ],
+   "kind": "mantissa_high",
+   "bit": 45,
+   "old": 87899.0,
+   "new": 87387.0,
+   "program": "addition",
+   "try_no": 6
+  },
+  {
+   "true_sublayer": "embed",
+   "index": [
+    682,
+    3
+   ],
+   "kind": "exponent",
+   "bit": 52,
+   "old": 1.0,
+   "new": 0.5,
+   "program": "fibonacci",
+   "try_no": 9
+  },
+  {
+   "true_sublayer": "embed",
+   "index": [
+    714,
+    6
+   ],
+   "kind": "mantissa_high",
+   "bit": 51,
+   "old": 1.0,
+   "new": 1.5,
+   "program": "fibonacci",
+   "try_no": 10
+  },
+  {
+   "true_sublayer": "embed",
+   "index": [
+    391,
+    3
+   ],
+   "kind": "zero",
+   "bit": null,
+   "old": 1.0,
+   "new": 0.0,
+   "program": "fibonacci",
+   "try_no": 11
+  },
+  {
+   "true_sublayer": "embed",
+   "index": [
+    759,
+    3
+   ],
+   "kind": "sign",
+   "bit": 63,
+   "old": 1.0,
+   "new": -1.0,
+   "program": "fibonacci",
+   "try_no": 12
+  },
+  {
+   "true_sublayer": "head",
+   "index": [
+    204,
+    17
+   ],
+   "kind": "sign",
+   "bit": 63,
+   "old": 182.0,
+   "new": -182.0,
+   "program": "addition",
+   "try_no": 16
+  },
+  {
+   "true_sublayer": "L2.ffn",
+   "index": [
+    59,
+    0
+   ],
+   "kind": "exponent",
+   "bit": 60,
+   "old": 1.0,
+   "new": 8.636168555094445e-78,
+   "program": "addition",
+   "try_no": 17
+  },
+  {
+   "true_sublayer": "head",
+   "index": [
+    50,
+    20
+   ],
+   "kind": "mantissa_high",
+   "bit": 51,
+   "old": 32.0,
+   "new": 48.0,
+   "program": "addition",
+   "try_no": 18
+  },
+  {
+   "true_sublayer": "head",
+   "index": [
+    123,
+    19
+   ],
+   "kind": "mantissa_high",
+   "bit": 46,
+   "old": -100000.0,
+   "new": -98976.0,
+   "program": "addition",
+   "try_no": 22
+  }
+ ],
+ "seed": 1
+}

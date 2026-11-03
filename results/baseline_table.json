@@ -1,0 +1,1102 @@
+{
+ "table": [
+  {
+   "class": "weight",
+   "harmful": 15,
+   "output_only_detects": 1.0,
+   "output_only_locates": 0.0,
+   "weight_diff_locates": 1.0,
+   "referee_locates": 1.0
+  },
+  {
+   "class": "act",
+   "harmful": 15,
+   "output_only_detects": 1.0,
+   "output_only_locates": 0.0,
+   "weight_diff_locates": 0.0,
+   "referee_locates": 0.9333333333333333
+  },
+  {
+   "class": "kv",
+   "harmful": 15,
+   "output_only_detects": 1.0,
+   "output_only_locates": 0.0,
+   "weight_diff_locates": 0.0,
+   "referee_locates": 1.0
+  }
+ ],
+ "rows": [
+  {
+   "class": "weight",
+   "program": "hello",
+   "true_sublayer": "L2.ffn",
+   "true_position": null,
+   "fault": {
+    "kind": "sign",
+    "index": [
+     10,
+     5
+    ],
+    "bit": 63
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": "L2.ffn",
+   "weight_diff_correct": true,
+   "referee_step_correct": true,
+   "referee_sublayer": "L2.ffn",
+   "referee_stage": "step",
+   "referee_position": 465,
+   "referee_correct": true,
+   "referee_seconds": 0.17
+  },
+  {
+   "class": "weight",
+   "program": "hello",
+   "true_sublayer": "L4.attn",
+   "true_position": null,
+   "fault": {
+    "kind": "sign",
+    "index": [
+     2,
+     32
+    ],
+    "bit": 63
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": "L4.attn",
+   "weight_diff_correct": true,
+   "referee_step_correct": true,
+   "referee_sublayer": "L4.attn",
+   "referee_stage": "step",
+   "referee_position": 466,
+   "referee_correct": true,
+   "referee_seconds": 0.17
+  },
+  {
+   "class": "weight",
+   "program": "addition",
+   "true_sublayer": "L3.ffn",
+   "true_position": null,
+   "fault": {
+    "kind": "exponent",
+    "index": [
+     14,
+     9
+    ],
+    "bit": 60
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": "L3.ffn",
+   "weight_diff_correct": true,
+   "referee_step_correct": true,
+   "referee_sublayer": "L3.ffn",
+   "referee_stage": "step",
+   "referee_position": 1059,
+   "referee_correct": true,
+   "referee_seconds": 0.37
+  },
+  {
+   "class": "weight",
+   "program": "fibonacci",
+   "true_sublayer": "L0.attn",
+   "true_position": null,
+   "fault": {
+    "kind": "exponent",
+    "index": [
+     78,
+     3
+    ],
+    "bit": 55
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": "L0.attn",
+   "weight_diff_correct": true,
+   "referee_step_correct": true,
+   "referee_sublayer": "L0.attn",
+   "referee_stage": "step",
+   "referee_position": 5262,
+   "referee_correct": true,
+   "referee_seconds": 1.93
+  },
+  {
+   "class": "weight",
+   "program": "addition",
+   "true_sublayer": "L3.ffn",
+   "true_position": null,
+   "fault": {
+    "kind": "sign",
+    "index": [
+     62,
+     3
+    ],
+    "bit": 63
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": "L3.ffn",
+   "weight_diff_correct": true,
+   "referee_step_correct": true,
+   "referee_sublayer": "L3.ffn",
+   "referee_stage": "step",
+   "referee_position": 952,
+   "referee_correct": true,
+   "referee_seconds": 0.35
+  },
+  {
+   "class": "weight",
+   "program": "addition",
+   "true_sublayer": "L2.attn",
+   "true_position": null,
+   "fault": {
+    "kind": "zero",
+    "index": [
+     14,
+     6
+    ],
+    "bit": null
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": "L2.attn",
+   "weight_diff_correct": true,
+   "referee_step_correct": true,
+   "referee_sublayer": "L2.attn",
+   "referee_stage": "step",
+   "referee_position": 949,
+   "referee_correct": true,
+   "referee_seconds": 0.32
+  },
+  {
+   "class": "weight",
+   "program": "addition",
+   "true_sublayer": "L1.ffn",
+   "true_position": null,
+   "fault": {
+    "kind": "zero",
+    "index": [
+     1,
+     0
+    ],
+    "bit": null
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": "L1.ffn",
+   "weight_diff_correct": true,
+   "referee_step_correct": true,
+   "referee_sublayer": "L1.ffn",
+   "referee_stage": "step",
+   "referee_position": 948,
+   "referee_correct": true,
+   "referee_seconds": 0.33
+  },
+  {
+   "class": "weight",
+   "program": "hello",
+   "true_sublayer": "L0.ffn",
+   "true_position": null,
+   "fault": {
+    "kind": "zero",
+    "index": [
+     9,
+     1
+    ],
+    "bit": null
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": "L0.ffn",
+   "weight_diff_correct": true,
+   "referee_step_correct": true,
+   "referee_sublayer": "L0.ffn",
+   "referee_stage": "step",
+   "referee_position": 585,
+   "referee_correct": true,
+   "referee_seconds": 0.19
+  },
+  {
+   "class": "weight",
+   "program": "fibonacci",
+   "true_sublayer": "L2.attn",
+   "true_position": null,
+   "fault": {
+    "kind": "mantissa_high",
+    "index": [
+     90,
+     4
+    ],
+    "bit": 51
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": "L2.attn",
+   "weight_diff_correct": true,
+   "referee_step_correct": true,
+   "referee_sublayer": "L2.attn",
+   "referee_stage": "step",
+   "referee_position": 5055,
+   "referee_correct": true,
+   "referee_seconds": 1.69
+  },
+  {
+   "class": "weight",
+   "program": "fibonacci",
+   "true_sublayer": "L0.attn",
+   "true_position": null,
+   "fault": {
+    "kind": "zero",
+    "index": [
+     19,
+     0
+    ],
+    "bit": null
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": "L0.attn",
+   "weight_diff_correct": true,
+   "referee_step_correct": true,
+   "referee_sublayer": "L0.attn",
+   "referee_stage": "step",
+   "referee_position": 5817,
+   "referee_correct": true,
+   "referee_seconds": 2.26
+  },
+  {
+   "class": "weight",
+   "program": "addition",
+   "true_sublayer": "L3.attn",
+   "true_position": null,
+   "fault": {
+    "kind": "sign",
+    "index": [
+     82,
+     3
+    ],
+    "bit": 63
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": "L3.attn",
+   "weight_diff_correct": true,
+   "referee_step_correct": true,
+   "referee_sublayer": "L3.attn",
+   "referee_stage": "step",
+   "referee_position": 2515,
+   "referee_correct": true,
+   "referee_seconds": 0.87
+  },
+  {
+   "class": "weight",
+   "program": "hello",
+   "true_sublayer": "L2.ffn",
+   "true_position": null,
+   "fault": {
+    "kind": "zero",
+    "index": [
+     5,
+     9
+    ],
+    "bit": null
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": "L2.ffn",
+   "weight_diff_correct": true,
+   "referee_step_correct": true,
+   "referee_sublayer": "L2.ffn",
+   "referee_stage": "scan",
+   "referee_position": 343,
+   "referee_correct": true,
+   "referee_seconds": 0.78
+  },
+  {
+   "class": "weight",
+   "program": "fibonacci",
+   "true_sublayer": "L0.ffn",
+   "true_position": null,
+   "fault": {
+    "kind": "mantissa_high",
+    "index": [
+     9,
+     3
+    ],
+    "bit": 44
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": "L0.ffn",
+   "weight_diff_correct": true,
+   "referee_step_correct": true,
+   "referee_sublayer": "L0.ffn",
+   "referee_stage": "step",
+   "referee_position": 5262,
+   "referee_correct": true,
+   "referee_seconds": 1.79
+  },
+  {
+   "class": "weight",
+   "program": "addition",
+   "true_sublayer": "L2.ffn",
+   "true_position": null,
+   "fault": {
+    "kind": "zero",
+    "index": [
+     4,
+     8
+    ],
+    "bit": null
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": "L2.ffn",
+   "weight_diff_correct": true,
+   "referee_step_correct": true,
+   "referee_sublayer": "L2.ffn",
+   "referee_stage": "scan",
+   "referee_position": 1,
+   "referee_correct": true,
+   "referee_seconds": 2.2
+  },
+  {
+   "class": "weight",
+   "program": "addition",
+   "true_sublayer": "L0.attn",
+   "true_position": null,
+   "fault": {
+    "kind": "exponent",
+    "index": [
+     2,
+     0
+    ],
+    "bit": 53
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": "L0.attn",
+   "weight_diff_correct": true,
+   "referee_step_correct": true,
+   "referee_sublayer": "L0.attn",
+   "referee_stage": "step",
+   "referee_position": 1118,
+   "referee_correct": true,
+   "referee_seconds": 0.38
+  },
+  {
+   "class": "weight",
+   "summary": true,
+   "harmful": 15,
+   "benign": 16,
+   "tries": 31
+  },
+  {
+   "class": "act",
+   "program": "hello",
+   "true_sublayer": "L2.attn",
+   "true_position": 208,
+   "fault": {
+    "type": "act",
+    "pos": 208,
+    "sublayer": 5,
+    "dim": 1,
+    "bit": 46,
+    "kind": "mantissa_high"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L2.attn",
+   "referee_stage": "scan",
+   "referee_position": 208,
+   "referee_correct": true,
+   "referee_seconds": 0.96
+  },
+  {
+   "class": "act",
+   "program": "fibonacci",
+   "true_sublayer": "L2.attn",
+   "true_position": 8655,
+   "fault": {
+    "type": "act",
+    "pos": 8655,
+    "sublayer": 5,
+    "dim": 9,
+    "bit": 63,
+    "kind": "sign"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L2.attn",
+   "referee_stage": "step",
+   "referee_position": 8655,
+   "referee_correct": true,
+   "referee_seconds": 3.14
+  },
+  {
+   "class": "act",
+   "program": "hello",
+   "true_sublayer": "L2.ffn",
+   "true_position": 286,
+   "fault": {
+    "type": "act",
+    "pos": 286,
+    "sublayer": 6,
+    "dim": 12,
+    "bit": 63,
+    "kind": "sign"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L2.ffn",
+   "referee_stage": "scan",
+   "referee_position": 286,
+   "referee_correct": true,
+   "referee_seconds": 0.81
+  },
+  {
+   "class": "act",
+   "program": "addition",
+   "true_sublayer": "L2.attn",
+   "true_position": 15,
+   "fault": {
+    "type": "act",
+    "pos": 15,
+    "sublayer": 5,
+    "dim": 21,
+    "bit": 63,
+    "kind": "sign"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L2.attn",
+   "referee_stage": "scan",
+   "referee_position": 15,
+   "referee_correct": true,
+   "referee_seconds": 0.31
+  },
+  {
+   "class": "act",
+   "program": "hello",
+   "true_sublayer": "L6.attn",
+   "true_position": 564,
+   "fault": {
+    "type": "act",
+    "pos": 564,
+    "sublayer": 13,
+    "dim": 3,
+    "bit": 58,
+    "kind": "exponent"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L6.attn",
+   "referee_stage": "step",
+   "referee_position": 564,
+   "referee_correct": true,
+   "referee_seconds": 0.09
+  },
+  {
+   "class": "act",
+   "program": "hello",
+   "true_sublayer": "L2.ffn",
+   "true_position": 393,
+   "fault": {
+    "type": "act",
+    "pos": 393,
+    "sublayer": 6,
+    "dim": 16,
+    "bit": 63,
+    "kind": "sign"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L2.ffn",
+   "referee_stage": "scan",
+   "referee_position": 393,
+   "referee_correct": true,
+   "referee_seconds": 0.47
+  },
+  {
+   "class": "act",
+   "program": "hello",
+   "true_sublayer": "L2.ffn",
+   "true_position": 291,
+   "fault": {
+    "type": "act",
+    "pos": 291,
+    "sublayer": 6,
+    "dim": 3,
+    "bit": 63,
+    "kind": "sign"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L2.ffn",
+   "referee_stage": "scan",
+   "referee_position": 291,
+   "referee_correct": true,
+   "referee_seconds": 1.04
+  },
+  {
+   "class": "act",
+   "program": "fibonacci",
+   "true_sublayer": "L3.attn",
+   "true_position": 6445,
+   "fault": {
+    "type": "act",
+    "pos": 6445,
+    "sublayer": 7,
+    "dim": 20,
+    "bit": 63,
+    "kind": "sign"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L3.attn",
+   "referee_stage": "step",
+   "referee_position": 6445,
+   "referee_correct": true,
+   "referee_seconds": 2.34
+  },
+  {
+   "class": "act",
+   "program": "addition",
+   "true_sublayer": "L0.attn",
+   "true_position": 1387,
+   "fault": {
+    "type": "act",
+    "pos": 1387,
+    "sublayer": 1,
+    "dim": 0,
+    "bit": 59,
+    "kind": "exponent"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L0.attn",
+   "referee_stage": "step",
+   "referee_position": 1387,
+   "referee_correct": true,
+   "referee_seconds": 0.46
+  },
+  {
+   "class": "act",
+   "program": "hello",
+   "true_sublayer": "L0.attn",
+   "true_position": 951,
+   "fault": {
+    "type": "act",
+    "pos": 951,
+    "sublayer": 1,
+    "dim": 3,
+    "bit": 52,
+    "kind": "exponent"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L0.attn",
+   "referee_stage": "step",
+   "referee_position": 951,
+   "referee_correct": true,
+   "referee_seconds": 0.33
+  },
+  {
+   "class": "act",
+   "program": "addition",
+   "true_sublayer": "L0.ffn",
+   "true_position": 4068,
+   "fault": {
+    "type": "act",
+    "pos": 4068,
+    "sublayer": 2,
+    "dim": 0,
+    "bit": 54,
+    "kind": "exponent"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L0.ffn",
+   "referee_stage": "step",
+   "referee_position": 4068,
+   "referee_correct": true,
+   "referee_seconds": 1.41
+  },
+  {
+   "class": "act",
+   "program": "addition",
+   "true_sublayer": "L0.attn",
+   "true_position": 3341,
+   "fault": {
+    "type": "act",
+    "pos": 3341,
+    "sublayer": 1,
+    "dim": 2,
+    "bit": 63,
+    "kind": "sign"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L0.attn",
+   "referee_stage": "step",
+   "referee_position": 3341,
+   "referee_correct": true,
+   "referee_seconds": 1.15
+  },
+  {
+   "class": "act",
+   "program": "addition",
+   "true_sublayer": "L1.ffn",
+   "true_position": 1671,
+   "fault": {
+    "type": "act",
+    "pos": 1671,
+    "sublayer": 4,
+    "dim": 2,
+    "bit": 63,
+    "kind": "sign"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L1.ffn",
+   "referee_stage": "step",
+   "referee_position": 1671,
+   "referee_correct": true,
+   "referee_seconds": 0.63
+  },
+  {
+   "class": "act",
+   "program": "fibonacci",
+   "true_sublayer": "L2.ffn",
+   "true_position": 6785,
+   "fault": {
+    "type": "act",
+    "pos": 6785,
+    "sublayer": 6,
+    "dim": 1,
+    "bit": 49,
+    "kind": "mantissa_high"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L2.ffn",
+   "referee_stage": "scan",
+   "referee_position": 5277,
+   "referee_correct": false,
+   "referee_seconds": 5.39
+  },
+  {
+   "class": "act",
+   "program": "hello",
+   "true_sublayer": "L3.ffn",
+   "true_position": 934,
+   "fault": {
+    "type": "act",
+    "pos": 934,
+    "sublayer": 8,
+    "dim": 19,
+    "bit": 61,
+    "kind": "exponent"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L3.ffn",
+   "referee_stage": "step",
+   "referee_position": 934,
+   "referee_correct": true,
+   "referee_seconds": 0.33
+  },
+  {
+   "class": "act",
+   "summary": true,
+   "harmful": 15,
+   "benign": 170,
+   "tries": 185
+  },
+  {
+   "class": "kv",
+   "program": "addition",
+   "true_sublayer": "L2.attn",
+   "true_position": 396,
+   "fault": {
+    "type": "kv",
+    "pos": 396,
+    "layer": 2,
+    "which": "v",
+    "dim": 19,
+    "bit": 63,
+    "kind": "sign"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L2.attn",
+   "referee_stage": "scan",
+   "referee_position": 396,
+   "referee_correct": true,
+   "referee_seconds": 2.12
+  },
+  {
+   "class": "kv",
+   "program": "hello",
+   "true_sublayer": "L0.attn",
+   "true_position": 94,
+   "fault": {
+    "type": "kv",
+    "pos": 94,
+    "layer": 0,
+    "which": "k",
+    "dim": 0,
+    "bit": 55,
+    "kind": "exponent"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L0.attn",
+   "referee_stage": "step",
+   "referee_position": 585,
+   "referee_correct": true,
+   "referee_seconds": 0.19
+  },
+  {
+   "class": "kv",
+   "program": "hello",
+   "true_sublayer": "L0.attn",
+   "true_position": 1006,
+   "fault": {
+    "type": "kv",
+    "pos": 1006,
+    "layer": 0,
+    "which": "v",
+    "dim": 11,
+    "bit": 63,
+    "kind": "sign"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L0.attn",
+   "referee_stage": "scan",
+   "referee_position": 1006,
+   "referee_correct": true,
+   "referee_seconds": 1.47
+  },
+  {
+   "class": "kv",
+   "program": "hello",
+   "true_sublayer": "L1.attn",
+   "true_position": 435,
+   "fault": {
+    "type": "kv",
+    "pos": 435,
+    "layer": 1,
+    "which": "k",
+    "dim": 4,
+    "bit": 59,
+    "kind": "exponent"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L1.attn",
+   "referee_stage": "step",
+   "referee_position": 439,
+   "referee_correct": true,
+   "referee_seconds": 0.15
+  },
+  {
+   "class": "kv",
+   "program": "addition",
+   "true_sublayer": "L3.attn",
+   "true_position": 2797,
+   "fault": {
+    "type": "kv",
+    "pos": 2797,
+    "layer": 3,
+    "which": "k",
+    "dim": 18,
+    "bit": 63,
+    "kind": "sign"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L3.attn",
+   "referee_stage": "step",
+   "referee_position": 2797,
+   "referee_correct": true,
+   "referee_seconds": 0.93
+  },
+  {
+   "class": "kv",
+   "program": "hello",
+   "true_sublayer": "L0.attn",
+   "true_position": 357,
+   "fault": {
+    "type": "kv",
+    "pos": 357,
+    "layer": 0,
+    "which": "k",
+    "dim": 2,
+    "bit": 51,
+    "kind": "mantissa_high"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L0.attn",
+   "referee_stage": "step",
+   "referee_position": 585,
+   "referee_correct": true,
+   "referee_seconds": 0.1
+  },
+  {
+   "class": "kv",
+   "program": "addition",
+   "true_sublayer": "L3.attn",
+   "true_position": 448,
+   "fault": {
+    "type": "kv",
+    "pos": 448,
+    "layer": 3,
+    "which": "k",
+    "dim": 7,
+    "bit": 63,
+    "kind": "sign"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L3.attn",
+   "referee_stage": "step",
+   "referee_position": 2515,
+   "referee_correct": true,
+   "referee_seconds": 0.92
+  },
+  {
+   "class": "kv",
+   "program": "addition",
+   "true_sublayer": "L3.attn",
+   "true_position": 1985,
+   "fault": {
+    "type": "kv",
+    "pos": 1985,
+    "layer": 3,
+    "which": "k",
+    "dim": 3,
+    "bit": 63,
+    "kind": "sign"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L3.attn",
+   "referee_stage": "step",
+   "referee_position": 2004,
+   "referee_correct": true,
+   "referee_seconds": 0.69
+  },
+  {
+   "class": "kv",
+   "program": "addition",
+   "true_sublayer": "L2.attn",
+   "true_position": 3540,
+   "fault": {
+    "type": "kv",
+    "pos": 3540,
+    "layer": 2,
+    "which": "k",
+    "dim": 15,
+    "bit": 63,
+    "kind": "sign"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L2.attn",
+   "referee_stage": "step",
+   "referee_position": 3541,
+   "referee_correct": true,
+   "referee_seconds": 1.68
+  },
+  {
+   "class": "kv",
+   "program": "fibonacci",
+   "true_sublayer": "L0.attn",
+   "true_position": 6496,
+   "fault": {
+    "type": "kv",
+    "pos": 6496,
+    "layer": 0,
+    "which": "v",
+    "dim": 10,
+    "bit": 50,
+    "kind": "mantissa_high"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L0.attn",
+   "referee_stage": "step",
+   "referee_position": 6496,
+   "referee_correct": true,
+   "referee_seconds": 2.28
+  },
+  {
+   "class": "kv",
+   "program": "fibonacci",
+   "true_sublayer": "L3.attn",
+   "true_position": 3348,
+   "fault": {
+    "type": "kv",
+    "pos": 3348,
+    "layer": 3,
+    "which": "k",
+    "dim": 1,
+    "bit": 63,
+    "kind": "sign"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L3.attn",
+   "referee_stage": "step",
+   "referee_position": 5196,
+   "referee_correct": true,
+   "referee_seconds": 1.96
+  },
+  {
+   "class": "kv",
+   "program": "fibonacci",
+   "true_sublayer": "L4.attn",
+   "true_position": 2569,
+   "fault": {
+    "type": "kv",
+    "pos": 2569,
+    "layer": 4,
+    "which": "k",
+    "dim": 1,
+    "bit": 63,
+    "kind": "sign"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L4.attn",
+   "referee_stage": "step",
+   "referee_position": 5060,
+   "referee_correct": true,
+   "referee_seconds": 1.68
+  },
+  {
+   "class": "kv",
+   "program": "fibonacci",
+   "true_sublayer": "L0.attn",
+   "true_position": 3922,
+   "fault": {
+    "type": "kv",
+    "pos": 3922,
+    "layer": 0,
+    "which": "k",
+    "dim": 6,
+    "bit": 56,
+    "kind": "exponent"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L0.attn",
+   "referee_stage": "step",
+   "referee_position": 5166,
+   "referee_correct": true,
+   "referee_seconds": 1.8
+  },
+  {
+   "class": "kv",
+   "program": "hello",
+   "true_sublayer": "L2.attn",
+   "true_position": 294,
+   "fault": {
+    "type": "kv",
+    "pos": 294,
+    "layer": 2,
+    "which": "k",
+    "dim": 3,
+    "bit": 50,
+    "kind": "mantissa_high"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L2.attn",
+   "referee_stage": "step",
+   "referee_position": 474,
+   "referee_correct": true,
+   "referee_seconds": 0.17
+  },
+  {
+   "class": "kv",
+   "program": "hello",
+   "true_sublayer": "L3.attn",
+   "true_position": 551,
+   "fault": {
+    "type": "kv",
+    "pos": 551,
+    "layer": 3,
+    "which": "k",
+    "dim": 1,
+    "bit": 48,
+    "kind": "mantissa_high"
+   },
+   "output_only_detects": true,
+   "weight_diff_sublayer": null,
+   "weight_diff_correct": false,
+   "referee_step_correct": true,
+   "referee_sublayer": "L3.attn",
+   "referee_stage": "step",
+   "referee_position": 574,
+   "referee_correct": true,
+   "referee_seconds": 0.22
+  },
+  {
+   "class": "kv",
+   "summary": true,
+   "harmful": 15,
+   "benign": 285,
+   "tries": 300
+  }
+ ],
+ "seed": 7
+}

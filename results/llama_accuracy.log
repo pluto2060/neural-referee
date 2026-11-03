@@ -1,0 +1,2 @@
+{"request": "print the sum of the decimal digits of the input number", "input": "98765", "expected": "35", "first_try_correct": true, "correct_within_3": true, "rounds_used": 1, "outputs": ["35"], "seconds": 318}
+{"request": "print the number of characters in the input", "input": "transformer", "expected": "11", "first_try_correct": true, "correct_within_3": true, "rounds_used": 1, "outputs": ["11"], "seconds": 201}

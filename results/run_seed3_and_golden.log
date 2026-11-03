@@ -1,0 +1,18 @@
+[20/20] fibonacci sign          true=L1.ffn    found=L1.ffn [step] step 5168 (oracle 5168) cmp=13 prover 3.4s referee 0.83s
+{
+ "harmful": 20,
+ "benign": 20,
+ "tries": 40,
+ "located_exactly": 20,
+ "pass_rule": ">= 9 of 10 located exactly",
+ "pass": true,
+ "found_at_wrong_step": 15,
+ "needed_earlier_scan": 5,
+ "referee_to_prover_time_ratio": 0.194,
+ "mean_prover_seconds": 3.6,
+ "mean_referee_seconds": 0.7
+}
+golden hello 1034 PASS
+golden addition 4362 PASS
+golden fibonacci 9037 PASS
+golden collatz 44332 PASS
