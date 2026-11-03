@@ -9,7 +9,7 @@ The head (argmax over vocab) reads R[pos, 2L, :].
 import os
 import sys
 
-TVM_ROOT = os.environ.get("TVM_ROOT", "/home/desk-1/Project/_ext/transformer-vm")
+TVM_ROOT = os.environ.get("TVM_ROOT", os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "..", "_ext", "transformer-vm"))
 sys.path.insert(0, TVM_ROOT)
 
 import torch  # noqa: E402

@@ -1,3 +1,7 @@
 __pycache__/
 .env
 *.bin
+*.wasm
+results/programs/*_ref.txt
+results/programs/*_spec.txt
+results/programs/*.txt

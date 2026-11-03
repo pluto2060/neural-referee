@@ -1,7 +1,10 @@
-"""Meta Llama as the natural-language front end and the verdict explainer.
+"""Meta models as the natural-language front end and the verdict explainer.
 
-Backend: open-weights Llama 3.2 3B Instruct (GGUF, Q4_K_M) through llama.cpp on CPU, no API key.
-Set LLAMA_GGUF to another file to swap the model.
+Backends (chosen automatically):
+  1. Meta Model API (Muse), when META_MODEL_API_KEY is set. OpenAI-compatible chat completions at
+     https://api.meta.ai/v1 ; model from META_MODEL (default muse-spark-1.3).
+  2. Otherwise open-weights Llama 3.2 3B Instruct (GGUF, Q4_K_M) through llama.cpp on CPU.
+     Set LLAMA_GGUF to another file to swap the model.
 """
 import json
 import os
@@ -10,7 +13,10 @@ import tempfile
 
 from referee import tvm
 
-LLAMA_GGUF = os.environ.get("LLAMA_GGUF", "/home/desk-1/Project/_ext/models/Llama-3.2-3B-Instruct-Q4_K_M.gguf")
+_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+LLAMA_GGUF = os.environ.get("LLAMA_GGUF", os.path.join(_ROOT, "..", "_ext", "models", "Llama-3.2-3B-Instruct-Q4_K_M.gguf"))
+META_API_BASE = os.environ.get("META_API_BASE", "https://api.meta.ai/v1")
+META_MODEL = os.environ.get("META_MODEL", "muse-spark-1.3")
 _llm = None
 
 SYSTEM_C = """You write tiny C programs for a computer that runs inside a transformer.
@@ -64,7 +70,30 @@ def _model():
     return _llm
 
 
+def backend():
+    return f"meta-model-api:{META_MODEL}" if os.environ.get("META_MODEL_API_KEY") else f"local:{os.path.basename(LLAMA_GGUF)}"
+
+
+def _chat_meta_api(system, user, max_tokens):
+    import urllib.request
+    # Muse models spend tokens on hidden reasoning before answering, so give them room.
+    body = json.dumps({"model": META_MODEL, "temperature": 0, "max_tokens": max(max_tokens, 4096),
+                       "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}]}).encode()
+    req = urllib.request.Request(META_API_BASE.rstrip("/") + "/chat/completions", body,
+                                 {"Authorization": "Bearer " + os.environ["META_MODEL_API_KEY"],
+                                  "Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=120) as r:
+        d = json.load(r)
+    _USAGE.append(d.get("usage", {}))
+    return d["choices"][0]["message"]["content"] or ""
+
+
+_USAGE = []
+
+
 def chat(system, user, max_tokens=512):
+    if os.environ.get("META_MODEL_API_KEY"):
+        return _chat_meta_api(system, user, max_tokens)
     out = _model().create_chat_completion(
         messages=[{"role": "system", "content": system}, {"role": "user", "content": user}],
         temperature=0.0, max_tokens=max_tokens)
@@ -135,7 +164,14 @@ def write_checked_program(request, args, expect, name, attempts=3):
         log.append({"round": i + 1, "compile_log": clog})
         if code is None:
             continue
-        txt, ref_txt = build(code, args, f"{name}_r{i + 1}")
+        try:
+            txt, ref_txt = build(code, args, f"{name}_r{i + 1}")
+        except Exception as e:  # e.g. an opcode the transformer VM does not implement
+            err = str(e)[-300:]
+            log[-1].update(build_error=err, correct=False)
+            req = (f"{request}\nYour previous program:\n```c\n{code}\n```\ncompiled but cannot run on this "
+                   f"computer: {err}. Use only 32-bit int arithmetic with + and -, no long, no *, / or %.")
+            continue
         got = decode_output(open(ref_txt).read().split()).strip()
         log[-1].update(output=got, expected=expect, correct=got == expect.strip())
         if got == expect.strip():

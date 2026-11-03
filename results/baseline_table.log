@@ -32,3 +32,40 @@
 [kv 2/15] hello true=L0.attn@94 referee=L0.attn@585 [step] weight_diff=None ok=True
 [kv 3/15] hello true=L0.attn@1006 referee=L0.attn@1006 [scan] weight_diff=None ok=True
 [kv 4/15] hello true=L1.attn@435 referee=L1.attn@439 [step] weight_diff=None ok=True
+[kv 5/15] addition true=L3.attn@2797 referee=L3.attn@2797 [step] weight_diff=None ok=True
+[kv 6/15] hello true=L0.attn@357 referee=L0.attn@585 [step] weight_diff=None ok=True
+[kv 7/15] addition true=L3.attn@448 referee=L3.attn@2515 [step] weight_diff=None ok=True
+[kv 8/15] addition true=L3.attn@1985 referee=L3.attn@2004 [step] weight_diff=None ok=True
+[kv 9/15] addition true=L2.attn@3540 referee=L2.attn@3541 [step] weight_diff=None ok=True
+[kv 10/15] fibonacci true=L0.attn@6496 referee=L0.attn@6496 [step] weight_diff=None ok=True
+[kv 11/15] fibonacci true=L3.attn@3348 referee=L3.attn@5196 [step] weight_diff=None ok=True
+[kv 12/15] fibonacci true=L4.attn@2569 referee=L4.attn@5060 [step] weight_diff=None ok=True
+[kv 13/15] fibonacci true=L0.attn@3922 referee=L0.attn@5166 [step] weight_diff=None ok=True
+[kv 14/15] hello true=L2.attn@294 referee=L2.attn@474 [step] weight_diff=None ok=True
+[kv 15/15] hello true=L3.attn@551 referee=L3.attn@574 [step] weight_diff=None ok=True
+[
+ {
+  "class": "weight",
+  "harmful": 15,
+  "output_only_detects": 1.0,
+  "output_only_locates": 0.0,
+  "weight_diff_locates": 1.0,
+  "referee_locates": 1.0
+ },
+ {
+  "class": "act",
+  "harmful": 15,
+  "output_only_detects": 1.0,
+  "output_only_locates": 0.0,
+  "weight_diff_locates": 0.0,
+  "referee_locates": 1.0
+ },
+ {
+  "class": "kv",
+  "harmful": 15,
+  "output_only_detects": 1.0,
+  "output_only_locates": 0.0,
+  "weight_diff_locates": 0.0,
+  "referee_locates": 1.0
+ }
+]

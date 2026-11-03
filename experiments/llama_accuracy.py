@@ -30,7 +30,8 @@ def main():
     rows = []
     for i, (req, arg, exp) in enumerate(CASES):
         t0 = time.time()
-        code, _, _, log = llama_front.write_checked_program(req, arg, exp, f"acc{i:02d}", attempts=3)
+        prefix = "muse" if llama_front.backend().startswith("meta-model-api") else "acc"
+        code, _, _, log = llama_front.write_checked_program(req, arg, exp, f"{prefix}{i:02d}", attempts=3)
         rounds = [r for r in log if "correct" in r]
         first = bool(rounds) and rounds[0]["round"] == 1 and rounds[0]["correct"]
         row = {"request": req, "input": arg, "expected": exp, "first_try_correct": first,
@@ -41,8 +42,9 @@ def main():
     n = len(rows)
     summary = {"n": n, "first_try_correct": sum(r["first_try_correct"] for r in rows),
                "correct_within_3_rounds": sum(r["correct_within_3"] for r in rows),
-               "model": os.path.basename(llama_front.LLAMA_GGUF)}
-    json.dump({"summary": summary, "rows": rows}, open("results/llama_accuracy.json", "w"), indent=1)
+               "backend": llama_front.backend()}
+    out = "results/accuracy_muse.json" if llama_front.backend().startswith("meta-model-api") else "results/llama_accuracy.json"
+    json.dump({"summary": summary, "rows": rows, "usage": getattr(llama_front, "_USAGE", [])}, open(out, "w"), indent=1)
     print(json.dumps(summary))
 
 

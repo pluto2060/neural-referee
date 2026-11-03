@@ -1,2 +1,34 @@
 {"request": "print the sum of the decimal digits of the input number", "input": "98765", "expected": "35", "first_try_correct": true, "correct_within_3": true, "rounds_used": 1, "outputs": ["35"], "seconds": 318}
 {"request": "print the number of characters in the input", "input": "transformer", "expected": "11", "first_try_correct": true, "correct_within_3": true, "rounds_used": 1, "outputs": ["11"], "seconds": 201}
+{"request": "count the vowels (a, e, i, o, u) in the input", "input": "neural computer", "expected": "6", "first_try_correct": true, "correct_within_3": true, "rounds_used": 1, "outputs": ["6"], "seconds": 378}
+{"request": "print the input reversed", "input": "referee", "expected": "eerefer", "first_try_correct": false, "correct_within_3": false, "rounds_used": 3, "outputs": ["e\nee\nree\neree\nferee\neferee\nreferee", "e\nee\nree\neree\nferee\neferee\nreferee", "e\nee\nree\neree\nferee\neferee\nreferee"], "seconds": 683}
+{"request": "print the input in uppercase", "input": "llama", "expected": "LLAMA", "first_try_correct": false, "correct_within_3": false, "rounds_used": 3, "outputs": ["LllamaLllamaAllamaMllamaAllama", "LllamaLllamaAllamaMllamaAllama", "LllamaLllamaAllamaMllamaAllama"], "seconds": 1278}
+{"request": "print the largest digit in the input number", "input": "472918", "expected": "9", "first_try_correct": true, "correct_within_3": true, "rounds_used": 1, "outputs": ["9"], "seconds": 90}
+{"request": "print the input number plus one", "input": "41", "expected": "42", "first_try_correct": true, "correct_within_3": true, "rounds_used": 1, "outputs": ["42"], "seconds": 116}
+{"request": "print YES if the input is a palindrome, otherwise NO", "input": "racecar", "expected": "YES", "first_try_correct": true, "correct_within_3": true, "rounds_used": 1, "outputs": ["YES"], "seconds": 128}
+{"request": "count how many times the letter l appears in the input", "input": "hello world", "expected": "3", "first_try_correct": true, "correct_within_3": true, "rounds_used": 1, "outputs": ["3"], "seconds": 101}
+Traceback (most recent call last):
+  File "/home/desk-1/Project/neural-referee/experiments/llama_accuracy.py", line 50, in <module>
+    
+  File "/home/desk-1/Project/neural-referee/experiments/llama_accuracy.py", line 33, in main
+    prefix = "muse" if llama_front.backend().startswith("meta-model-api") else "acc"
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/desk-1/Project/neural-referee/referee/llama_front.py", line 138, in write_checked_program
+    
+  File "/home/desk-1/Project/neural-referee/referee/llama_front.py", line 105, in build
+    from transformer_vm.compilation.compile_wasm import compile_c_to_wasm
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/desk-1/Project/_ext/transformer-vm/transformer_vm/compilation/compile_wasm.py", line 596, in compile_program
+    prefix, input_base = compile_wasm_to_prefix(wasm_path)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/desk-1/Project/_ext/transformer-vm/transformer_vm/compilation/compile_wasm.py", line 563, in compile_wasm_to_prefix
+    mod = decode(f.read())
+          ^^^^^^^^^^^^^^^^
+  File "/home/desk-1/Project/_ext/transformer-vm/transformer_vm/compilation/decoder.py", line 362, in decode
+    _decode_code_section(data, pos, section_end, mod)
+  File "/home/desk-1/Project/_ext/transformer-vm/transformer_vm/compilation/decoder.py", line 490, in _decode_code_section
+    instr, pos = _decode_instruction(data, pos)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/desk-1/Project/_ext/transformer-vm/transformer_vm/compilation/decoder.py", line 664, in _decode_instruction
+    raise ValueError(f"Unsupported wasm opcode: 0x{opcode:02x} at position {pos - 1}")
+ValueError: Unsupported wasm opcode: 0xad at position 199

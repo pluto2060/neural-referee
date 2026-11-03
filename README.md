@@ -6,7 +6,7 @@ They show the machine works by comparing final output with a reference. This pro
 fourth term: a referee that, when such a machine goes wrong, finds **the first wrong step and the
 sublayer that caused it**, without re-running the program.
 
-Built for the Meta Global AI Developer Hackathon (Oct 26 - Nov 4, 2026), Indie track. All code in this
+Built for the Meta Global AI Developer Hackathon (Oct 26 - Nov 4, 2026), Indie track, with Meta's Muse Spark 1.3 (Meta Model API) and open-weights Llama 3.2. All code in this
 repository is new work from 2026-11-03.
 
 ## Hypothesis H-R
@@ -30,27 +30,59 @@ Pass rule, fixed before running: at least 9 of 10 harmful injected faults locate
    inconsistent position and sublayer.
 
 ## Results (CPU only, no GPU)
-| Run | Harmful faults | Located exactly | Found at step k | Needed scan | Benign faults (no output change) | Referee time / prover time |
+
+### 1. Referee vs baselines on three fault classes (`results/baseline_table.json`, seed 7)
+15 harmful faults per class (faults that changed nothing in the trace are counted separately and skipped).
+
+| Fault class | What breaks | Output-only check (what transformer-vm / QwenPU report) | Weight-file diff | **Referee** |
+|---|---|---|---|---|
+| weight | one corrupted weight | detects 15/15, locates 0/15 | locates 15/15 | **locates 15/15** |
+| act | one bit flipped in a residual during execution (compute error) | detects 15/15, locates 0/15 | **locates 0/15** (weights are fine) | **locates 15/15** (exact position 15/15) |
+| kv | one bit flipped in attention memory during execution | detects 15/15, locates 0/15 | **locates 0/15** | **locates 15/15** (right sublayer; reports the first step that read the bad memory, exact write position 4/15) |
+
+Most single bit flips are harmless: 16 of 31 weight faults, 170 of 185 compute faults and 285 of 300
+memory faults left the trace unchanged, and the referee reports PASS for those.
+
+### 2. Fault localization, weight faults only (H-R test)
+| Run | Harmful faults | Located exactly | Found at step k | Needed scan | Benign | Referee time / prover time |
 |---|---|---|---|---|---|---|
-| `results/h_r_stratified.json` (seed 2, faults spread evenly over 16 sublayers) | 20 | 20 | 18 | 2 | 27 | 0.149 |
-| `results/h_r_stratified_seed3.json` (seed 3, same setup) | 20 | 20 | 15 | 5 | 20 | 0.194 |
-| `results/h_r.json` (seed 1, faults weighted by tensor size, first version) | 10 | 10 | - | - | 13 | - |
+| `results/h_r_stratified.json` (seed 2, faults spread over 16 sublayers) | 20 | 20 | 18 | 2 | 27 | 0.149 |
+| `results/h_r_stratified_seed3.json` (seed 3) | 20 | 20 | 15 | 5 | 20 | 0.194 |
+| `results/h_r.json` (seed 1, sampled by tensor size, 6 of 10 in the head) | 10 | 10 | - | - | 13 | - |
 
-No false alarms: the golden (unmodified) model passes on `hello`, `addition`, `fibonacci` and `collatz`
-(1,034 to 44,332 steps), see `results/run_seed3_and_golden.log`.
+No false alarms: the unmodified model passes `hello`, `addition`, `fibonacci` and `collatz`
+(1,034 to 44,332 steps).
 
-Fault kinds: sign flip, exponent bit flip, high mantissa bit flip, zeroed weight, on a random nonzero
-weight. Programs: `hello`, `addition`, `fibonacci` from transformer-vm (1,034-9,037 steps).
-More than half of random single-weight faults changed nothing in the output; the referee reports PASS
-for those, because the trace matches the reference.
+### 3. Hidden errors
+A runtime fault can corrupt a step without changing the final answer. In `results/demo_muse.json` the
+program printed the correct `35`, yet step 1,909 of 3,107 was computed wrongly in `L1.attn`. An
+output-only check passes this run; the referee fails it and names the step and sublayer.
+
+### 4. Meta models as the front end (`results/accuracy_muse.json`, `results/llama_accuracy.log`)
+10 fixed plain-language requests; a program counts as correct when its output on the plain WebAssembly
+reference equals the expected output. Wrong output or compile/run errors are fed back (up to 3 rounds).
+
+| Model | First try correct | Correct within 3 rounds | Time per request |
+|---|---|---|---|
+| Muse Spark 1.3 (Meta Model API) | 9/10 | 9/10 | about 12 s |
+| Llama 3.2 3B Instruct (open weights, local CPU) | 7/9 | 7/9 | about 6 min |
+
+The one Muse miss (sum of 1..n) is a correct C loop that clang -O2 rewrote into a closed form using
+64-bit multiply, an opcode transformer-vm does not implement. The local Llama run stopped on the same
+case. Muse's verdict explanations were also factually consistent; the 3B model contradicted itself on
+whether the outputs matched. Total Muse cost for the demo and the 10-request test: about 0.17 USD.
 
 ## Honest limits
+- The method (hash bisection plus one-step re-execution) follows Verde (Gensyn, arXiv 2502.19405); the
+  new part is applying it to computers compiled into transformer weights, where state lives in attention
+  history and a fault can reach the wrong step from an earlier position.
 - The referee needs the golden compiled weights. For compiled (not trained) layers this is cheap: the
   compiler output is deterministic and can be rebuilt by anyone.
-- Recomputing one attention sublayer still reads keys at all earlier positions (O(n) dot products, no
-  autoregressive generation). Measured cost is 15-19% of the prover's run time, not 1%.
-- The first seed-1 run sampled faults by tensor size, so 6 of 10 landed in the output head; the
-  stratified run is the one to cite.
+- Recomputing one attention sublayer still reads keys at all earlier positions (no autoregressive
+  generation). Measured referee time is 15-19% of the prover's run time, not 1%.
+- Bug found and fixed during the work: the earlier-position scan first recomputed in batches, which rounds
+  differently from the prover's one-vector-at-a-time arithmetic and gave 156 false mismatches on a clean
+  run. It now uses identical per-vector operations (0 mismatches).
 - Tested only on transformer-vm (7 layers, d_model 38). QwenPU needs a 40 GB GPU and was not run.
 
 ## Run it
@@ -65,8 +97,25 @@ PYTHONPATH=. $TVM_ROOT/.venv/bin/python experiments/h_r.py --n 20 --seed 2 --str
 ```
 No GPU or API key is needed for the referee.
 
+Meta model front end (program writing, verdict explanation):
+```
+export META_MODEL_API_KEY=...          # Meta Model API key from dev.meta.ai -> uses muse-spark-1.3
+# or leave it unset: open-weights Llama 3.2 3B GGUF via llama.cpp (pip install llama-cpp-python),
+#   path from LLAMA_GGUF (default ../_ext/models/Llama-3.2-3B-Instruct-Q4_K_M.gguf)
+export CLANG_PATH=<clang with wasm32>
+PYTHONPATH=. $TVM_ROOT/.venv/bin/python demo/run_demo.py "print the sum of the decimal digits of the input number" \
+    --input 98765 --expect 35 --fault act:pos=1908,sublayer=3,dim=3,bit=59
+PYTHONPATH=. $TVM_ROOT/.venv/bin/python experiments/baseline_table.py --n 15 --seed 7
+PYTHONPATH=. $TVM_ROOT/.venv/bin/python experiments/llama_accuracy.py
+```
+
 ## Layout
 - `referee/tvm.py` - prover run with activation commitments; golden recompute of one sublayer
 - `referee/protocol.py` - hash chain, bisection, one-step recheck, earlier-position scan
 - `referee/faults.py` - weight fault injection with the true sublayer recorded
+- `referee/baselines.py` - weight-file diff and output-only baselines
+- `referee/llama_front.py` - Meta model front end (Muse via Meta Model API, or local Llama)
+- `demo/run_demo.py` - request -> program -> neural computer -> referee -> explanation
 - `experiments/h_r.py` - the H-R test
+- `experiments/baseline_table.py` - referee vs baselines on weight, compute and memory faults
+- `experiments/llama_accuracy.py` - program-writing accuracy of the Meta model front end
