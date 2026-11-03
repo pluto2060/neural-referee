@@ -46,35 +46,38 @@ def main():
         b = p.chromium.launch(executable_path=exe) if exe else p.chromium.launch()
         ctx = b.new_context(viewport={"width": 1280, "height": 760}, record_video_dir=OUT, record_video_size={"width": 1280, "height": 760})
         page = ctx.new_page()
-        page.goto(card("<h1>Neural Referee</h1><div class=dim>Verifiable answers from a computer that runs inside transformer weights</div>"
+        t_start = time.time()
+        page.goto(card("<h1>Neural Referee</h1><div class=dim>Catch silent data corruption inside AI computation, and say exactly where it happened</div>"
                        "<p style='margin-top:40px'><code>Neural Computer = Compiled Layers + Neural State + Program Weights + <span class=acc>Verifier</span></code></p>"
                        "<p class=dim>Meta Global AI Developer Hackathon 2026 &middot; Indie track &middot; Push the Frontier</p>"))
         time.sleep(9)
-        page.goto(card("<h1>The problem</h1><p>Researchers now compile real computers into model weights: a WebAssembly machine (Percepta) and a RISC-V CPU inside a 4B open model (QwenPU).</p>"
+        page.goto(card("<h1>The problem</h1><p>Hardware sometimes computes a wrong value with no error. Meta studied these silent data corruptions across its fleet (Dixit et al., 2021).</p>"
+                       "<p>Computers are now compiled into model weights (Percepta's WebAssembly transformer, QwenPU's RISC-V CPU).</p>"
                        "<p>They only check that the <b>final output</b> matches. When one step goes wrong, nobody can say <b>which step</b> or <b>which part of the model</b>.</p>"
                        "<p class=acc>Neural Referee is the missing verifier.</p>"))
         time.sleep(16)
         page.goto(URL)
-        caption(page, "1. Ask in plain language. A Meta model (Meta Model API) writes the program; it runs inside a 7-layer transformer computer on CPU.")
-        time.sleep(4)
+        caption(page, "Ask in plain language. A Meta AI model (Meta Model API) writes the program; it runs inside a 7-layer transformer computer.")
+        time.sleep(5)
+        caption(page, "The first run is hit by a hardware-style bit flip, like silent data corruption on a bad machine.  (waiting time shown at 4x)")
+        t_run0 = time.time() - t_start
         page.click("#run")
-        page.wait_for_selector("text=every step verified", timeout=300000)
-        caption(page, "PASS: the referee compared hash chains of the whole trace and every step matched. The receipt hash lets anyone re-check this answer.")
-        time.sleep(9)
-        caption(page, "2. Now flip one bit in the computer's memory or arithmetic while it runs, like a hardware fault. Most flips are harmless, so we search for one that matters.")
-        page.click("#fault")
-        page.wait_for_selector("text=wrong step found", timeout=600000)
-        caption(page, "FAIL: about 11 hash comparisons find the first wrong step, then one step is rechecked layer by layer. The faulty sublayer is shown in red.")
-        time.sleep(12)
+        page.wait_for_selector("text=Delivered with receipt", timeout=900000)
+        t_run1 = time.time() - t_start
+        caption(page, "The referee finds the first wrong step and the sublayer in red. The model reads the verdict, re-runs, and delivers only the passing answer with a receipt.")
+        time.sleep(14)
         page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
-        caption(page, "The Meta model explains the verdict in plain language. A weight-file check would see nothing here: the weights never changed.")
-        time.sleep(10)
+        caption(page, "A weight-file check would see nothing here: the weights never changed. Only the step-by-step referee can say where it went wrong.")
+        time.sleep(9)
+        st = json.load(open(os.path.join(ROOT, "results", "agent_stress.json")))["summary"] if os.path.exists(os.path.join(ROOT, "results", "agent_stress.json")) else None
         rows = "".join(f"<tr><td>{n}</td><td>{T[k]['harmful']}</td><td class=ok>{int(T[k]['referee_locates']*T[k]['harmful'])}/{T[k]['harmful']}</td>"
                        f"<td class={'ok' if T[k]['weight_diff_locates'] else 'bad'}>{int(T[k]['weight_diff_locates']*T[k]['harmful'])}/{T[k]['harmful']}</td><td class=bad>0/{T[k]['harmful']}</td></tr>"
                        for k, n in (("weight", "Corrupted weight"), ("act", "Compute error while running"), ("kv", "Memory error while running")))
         page.goto(card("<h1>Results (CPU only, reproducible)</h1><table><tr><th>Fault</th><th>Harmful</th><th>Referee locates</th><th>Weight-file diff</th><th>Output check locates</th></tr>"
                        f"{rows}</table><p>40/40 more weight faults located in two earlier runs. No false alarms on four clean programs up to 44,332 steps.</p>"
-                       "<p>Hidden error caught: final answer correct, step 1,909 of 3,107 wrong.</p>"))
+                       "<p>Hidden error caught: final answer correct, step 1,909 of 3,107 wrong.</p>"
+                       + (f"<p>Stress test, 8 bit flips per run: unchecked pipeline delivered <b class=bad>{st['unverified_wrong_delivered']}</b> wrong answers out of {st['n']}; "
+                          f"the agent loop delivered <b class=ok>{st['agent_wrong_delivered']}</b> wrong ({st['agent_correct_delivered']} correct, {st['agent_abstained']} withheld).</p>" if st else "")))
         time.sleep(18)
         page.goto(card("<h1>Meta models in the loop</h1>"
                        f"<p>Program writing via Meta Model API: <b>{acc['first_try_correct']}/{acc['n']}</b> requests correct on the first try (about 12 s each). "
@@ -87,7 +90,12 @@ def main():
         vid = page.video.path()
         ctx.close(); b.close()
     mp4 = os.path.join(OUT, "neural-referee-demo.mp4")
-    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", vid, "-c:v", "libx264", "-pix_fmt", "yuv420p", "-r", "30", mp4], check=True)
+    # play the waiting part of the live run at 4x; everything else at normal speed
+    a, b = t_run0 + 1.0, max(t_run0 + 2.0, t_run1 - 1.0)
+    fc = (f"[0:v]trim=0:{a},setpts=PTS-STARTPTS[v0];[0:v]trim={a}:{b},setpts=(PTS-STARTPTS)/4[v1];"
+          f"[0:v]trim={b},setpts=PTS-STARTPTS[v2];[v0][v1][v2]concat=n=3:v=1:a=0[out]")
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", vid, "-filter_complex", fc, "-map", "[out]",
+                    "-c:v", "libx264", "-pix_fmt", "yuv420p", "-r", "30", mp4], check=True)
     dur = subprocess.run(["ffmpeg", "-i", mp4], capture_output=True, text=True).stderr.split("Duration:")[-1].split(",")[0].strip()
     print(mp4, "duration_s", dur)
 

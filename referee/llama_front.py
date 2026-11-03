@@ -59,7 +59,8 @@ SYSTEM_EXPLAIN = """You explain a verification report to a non-expert in 3 short
 Say whether the computation was correct, at which step it first went wrong, which part of the
 model caused it, and what that means. State whether the final printed output matched the reference
 (field outputs_match); if it matched, say the error stayed hidden in the execution and only the
-step-by-step check found it. Use only facts from the report. No speculation."""
+step-by-step check found it. If after_retry is present, end by saying the re-run passed and its answer
+was delivered with a receipt. Use only facts from the report. No speculation."""
 
 
 def _model():
@@ -149,7 +150,7 @@ def decode_output(tokens):
 def explain(report):
     slim = {k: report.get(k) for k in ("verdict", "first_wrong_step", "trace_len", "faulty_sublayer",
                                        "fault_origin_position", "stage", "hash_comparisons",
-                                       "prover_output", "reference_output")}
+                                       "prover_output", "reference_output", "after_retry")}
     slim["outputs_match"] = report.get("prover_output") == report.get("reference_output")
     return chat(SYSTEM_EXPLAIN, json.dumps(slim), max_tokens=200)
 

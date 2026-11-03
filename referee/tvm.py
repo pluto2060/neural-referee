@@ -69,19 +69,21 @@ def run_prover(model, prefix, max_new, runtime_fault=None):
     Same arithmetic as VanillaTransformer.generate_with_cache, plus a record R of the
     residual after each sublayer at each position (the prover's activation commitment).
 
-    runtime_fault (weights untouched, simulates a hardware error during execution):
+    runtime_fault: one fault dict or a list of them (weights untouched, simulates hardware errors during
+    execution):
       {"type": "act", "pos": p, "sublayer": s, "dim": d, "bit": b}
           flip one bit of the residual right after sublayer s at position p (compute error)
       {"type": "kv", "pos": p, "layer": l, "which": "k"|"v", "dim": d, "bit": b}
           flip one bit of the key or value written to attention memory (memory error)
     The prover commits what it actually computed, so a corrupted residual is committed as is.
     """
-    rf = runtime_fault or {}
+    faults = runtime_fault if isinstance(runtime_fault, list) else ([runtime_fault] if runtime_fault else [])
+    acts = {(f["pos"], f["sublayer"]): f for f in faults if f.get("type") == "act"}
+    kvs = {(f["pos"], f["layer"]): f for f in faults if f.get("type") == "kv"}
 
     def act(x, pos, s):
-        if rf.get("type") == "act" and rf["pos"] == pos and rf["sublayer"] == s:
-            return _flip_bit(x, rf["dim"], rf["bit"])
-        return x
+        f = acts.get((pos, s))
+        return _flip_bit(x, f["dim"], f["bit"]) if f else x
 
     n_layers = len(model.attn)
     cache = _new_cache(model, n_layers)
@@ -95,11 +97,12 @@ def run_prover(model, prefix, max_new, runtime_fault=None):
         row = [x.clone()]
         for li, (attn, ff_in, ff_out) in enumerate(zip(model.attn, model.ff_in, model.ff_out)):
             q, k, v = (attn.in_proj_weight @ x).chunk(3, dim=-1)
-            if rf.get("type") == "kv" and rf["pos"] == pos and rf["layer"] == li:
-                if rf["which"] == "k":
-                    k = _flip_bit(k, rf["dim"], rf["bit"])
+            f = kvs.get((pos, li))
+            if f:
+                if f["which"] == "k":
+                    k = _flip_bit(k, f["dim"], f["bit"])
                 else:
-                    v = _flip_bit(v, rf["dim"], rf["bit"])
+                    v = _flip_bit(v, f["dim"], f["bit"])
             out = cache.layer_step(li, k.contiguous(), q.contiguous(), v.contiguous())
             x = act(x + attn.out_proj(out), pos, 2 * li + 1)
             row.append(x.clone())

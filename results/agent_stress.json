@@ -1,0 +1,375 @@
+{
+ "summary": {
+  "n": 12,
+  "k_faults_per_run": 8,
+  "unverified_wrong_delivered": 4,
+  "agent_wrong_delivered": 0,
+  "agent_correct_delivered": 10,
+  "agent_abstained": 2,
+  "program_repairs": 0,
+  "executions_total": 21,
+  "muse_retry_decisions": 11,
+  "note": "first 9 tasks from agent_stress.py (seed 9); the Collatz group was rerun with n in 5..40 (seed 19) after the n<1000 run hit an 11.3M-step trace"
+ },
+ "rows": [
+  {
+   "task": "Count how many times the letter 'e' appears in the input str",
+   "truth": "6",
+   "reference_output": "6",
+   "program_correct": true,
+   "unverified_delivered": "",
+   "unverified_wrong": true,
+   "agent_delivered": "6",
+   "agent_wrong": false,
+   "agent_abstained": false,
+   "attempts": 3,
+   "repairs": 0,
+   "decisions": [
+    "retry",
+    "retry"
+   ],
+   "receipt": "e4b9953f2501b4b0",
+   "seconds": 79
+  },
+  {
+   "task": "Count how many times the letter 'f' appears in the input str",
+   "truth": "6",
+   "reference_output": "6",
+   "program_correct": true,
+   "unverified_delivered": "6",
+   "unverified_wrong": false,
+   "agent_delivered": "6",
+   "agent_wrong": false,
+   "agent_abstained": false,
+   "attempts": 1,
+   "repairs": 0,
+   "decisions": [],
+   "receipt": "a983caf59700a4ed",
+   "seconds": 26
+  },
+  {
+   "task": "Count how many times the letter 'f' appears in the input str",
+   "truth": "12",
+   "reference_output": "12",
+   "program_correct": true,
+   "unverified_delivered": "12",
+   "unverified_wrong": false,
+   "agent_delivered": "12",
+   "agent_wrong": false,
+   "agent_abstained": false,
+   "attempts": 1,
+   "repairs": 0,
+   "decisions": [],
+   "receipt": "04b3a302e2d92c09",
+   "seconds": 31
+  },
+  {
+   "task": "Print the sum of the decimal digits of the input number.",
+   "truth": "112",
+   "reference_output": "112",
+   "program_correct": true,
+   "unverified_delivered": "",
+   "unverified_wrong": true,
+   "agent_delivered": "112",
+   "agent_wrong": false,
+   "agent_abstained": false,
+   "attempts": 3,
+   "repairs": 0,
+   "decisions": [
+    "retry",
+    "retry"
+   ],
+   "receipt": "50e8cf49d4880c08",
+   "seconds": 67
+  },
+  {
+   "task": "Print the sum of the decimal digits of the input number.",
+   "truth": "118",
+   "reference_output": "118",
+   "program_correct": true,
+   "unverified_delivered": "118",
+   "unverified_wrong": false,
+   "agent_delivered": "118",
+   "agent_wrong": false,
+   "agent_abstained": false,
+   "attempts": 2,
+   "repairs": 0,
+   "decisions": [
+    "retry"
+   ],
+   "receipt": "f098f1ee0eec84ec",
+   "seconds": 53
+  },
+  {
+   "task": "Print the sum of the decimal digits of the input number.",
+   "truth": "143",
+   "reference_output": "143",
+   "program_correct": true,
+   "unverified_delivered": "",
+   "unverified_wrong": true,
+   "agent_delivered": "143",
+   "agent_wrong": false,
+   "agent_abstained": false,
+   "attempts": 4,
+   "repairs": 0,
+   "decisions": [
+    "retry",
+    "retry",
+    "retry"
+   ],
+   "receipt": "c123053cfc50669a",
+   "seconds": 95
+  },
+  {
+   "task": "The input is two 20-digit numbers separated by '+'. Print th",
+   "truth": "66522906639838502939",
+   "reference_output": "66522906639838502939",
+   "program_correct": true,
+   "unverified_delivered": "66522906639838502939",
+   "unverified_wrong": false,
+   "agent_delivered": "66522906639838502939",
+   "agent_wrong": false,
+   "agent_abstained": false,
+   "attempts": 1,
+   "repairs": 0,
+   "decisions": [],
+   "receipt": "4a0f62b707e70cce",
+   "seconds": 175
+  },
+  {
+   "task": "The input is two 20-digit numbers separated by '+'. Print th",
+   "truth": "178300119648737676754",
+   "reference_output": null,
+   "program_correct": false,
+   "unverified_delivered": null,
+   "unverified_wrong": false,
+   "agent_delivered": null,
+   "agent_wrong": false,
+   "agent_abstained": true,
+   "attempts": 0,
+   "repairs": 0,
+   "decisions": [],
+   "receipt": "",
+   "seconds": 171
+  },
+  {
+   "task": "The input is two 20-digit numbers separated by '+'. Print th",
+   "truth": "175516345046532634363",
+   "reference_output": null,
+   "program_correct": false,
+   "unverified_delivered": null,
+   "unverified_wrong": false,
+   "agent_delivered": null,
+   "agent_wrong": false,
+   "agent_abstained": true,
+   "attempts": 0,
+   "repairs": 0,
+   "decisions": [],
+   "receipt": "",
+   "seconds": 202
+  },
+  {
+   "task": "Print the number of Collatz steps for the input number to re n=7",
+   "truth": "16",
+   "reference_output": "16",
+   "program_correct": true,
+   "unverified_delivered": "",
+   "unverified_wrong": true,
+   "agent_delivered": "16",
+   "agent_wrong": false,
+   "agent_abstained": false,
+   "attempts": 4,
+   "repairs": 0,
+   "decisions": [
+    "retry",
+    "retry",
+    "retry"
+   ],
+   "receipt": "7273dcf8eb45c66c",
+   "refused": null,
+   "seconds": 164,
+   "log": {
+    "task": "Print the number of Collatz steps for the input number to reach 1 (n -> n/2 if even, 3n+1 if odd).",
+    "input": "7",
+    "repairs": 0,
+    "attempts": [
+     {
+      "n_faults": 8,
+      "verdict": "FAIL",
+      "output": "",
+      "steps": 22131,
+      "first_wrong_step": 4058,
+      "faulty_sublayer": "L0.attn",
+      "receipt": "e03ff2ac013bb203f5a6d8bf514d769c422eae6a4c742a1a8adbaac42b310daf"
+     },
+     {
+      "n_faults": 8,
+      "verdict": "FAIL",
+      "output": "16",
+      "steps": 22080,
+      "first_wrong_step": 14825,
+      "faulty_sublayer": "L1.attn",
+      "receipt": "19113927cec3c64b5ed751601b4189b92b5dfbd9b324e476944aa24a67bcf62f"
+     },
+     {
+      "n_faults": 8,
+      "verdict": "FAIL",
+      "output": "",
+      "steps": 22131,
+      "first_wrong_step": 6042,
+      "faulty_sublayer": "L3.attn",
+      "receipt": "94731a6abd1dd0d27d15c38174c2d2740288c5eb9b380ae6e7a30009f08c3bc1"
+     },
+     {
+      "n_faults": 8,
+      "verdict": "PASS",
+      "output": "16",
+      "steps": 22080,
+      "first_wrong_step": null,
+      "faulty_sublayer": null,
+      "receipt": "7273dcf8eb45c66c158e0c2a2b646a377df4db59bb2b8f5a34fedecae1a694b2"
+     }
+    ],
+    "decisions": [
+     {
+      "action": "retry",
+      "reason": "Self-tests passed with no failures while referee reports an isolated L0 attn divergence consistent with transient hardware fault."
+     },
+     {
+      "action": "retry",
+      "reason": "Self-tests passed and failure localized to L1.attn indicates transient hardware divergence rather than program bug."
+     },
+     {
+      "action": "retry",
+      "reason": "Self-tests passed with no failures and divergence occurred late at step 6042 in L3.attn, indicating a transient hardware fault."
+     }
+    ],
+    "tests": [
+     {
+      "input": "1",
+      "output": "0"
+     },
+     {
+      "input": "2",
+      "output": "1"
+     },
+     {
+      "input": "3",
+      "output": "7"
+     }
+    ],
+    "self_test_fails": [],
+    "code": "void compute(const char *input) {\n    int n = parse_int(input);\n    int steps = 0;\n    while (n != 1) {\n        int t = n;\n        int half = 0;\n        while (t > 1) {\n            t = t - 2;\n            half = half + 1;\n        }\n        if (t == 0) {\n            n = half;\n        } else {\n            n = n + n + n + 1;\n        }\n        steps = steps + 1;\n    }\n    print_int(steps);\n    putchar('\\n');\n}\n",
+    "reference_output": "16",
+    "delivered": "16",
+    "receipt": "7273dcf8eb45c66c158e0c2a2b646a377df4db59bb2b8f5a34fedecae1a694b2"
+   }
+  },
+  {
+   "task": "Print the number of Collatz steps for the input number to re n=21",
+   "truth": "7",
+   "reference_output": "7",
+   "program_correct": true,
+   "unverified_delivered": "7",
+   "unverified_wrong": false,
+   "agent_delivered": "7",
+   "agent_wrong": false,
+   "agent_abstained": false,
+   "attempts": 1,
+   "repairs": 0,
+   "decisions": [],
+   "receipt": "d6e78dc43f6ef6dc",
+   "refused": null,
+   "seconds": 58,
+   "log": {
+    "task": "Print the number of Collatz steps for the input number to reach 1 (n -> n/2 if even, 3n+1 if odd).",
+    "input": "21",
+    "repairs": 0,
+    "attempts": [
+     {
+      "n_faults": 8,
+      "verdict": "PASS",
+      "output": "7",
+      "steps": 11752,
+      "first_wrong_step": null,
+      "faulty_sublayer": null,
+      "receipt": "d6e78dc43f6ef6dcf8191059951006db1f37ba24100c0366676499f9fe56a7ff"
+     }
+    ],
+    "decisions": [],
+    "tests": [
+     {
+      "input": "1",
+      "output": "0"
+     },
+     {
+      "input": "2",
+      "output": "1"
+     },
+     {
+      "input": "3",
+      "output": "7"
+     }
+    ],
+    "self_test_fails": [],
+    "code": "void compute(const char *input) {\n    int n = parse_int(input);\n    int steps = 0;\n    while (n > 1) {\n        int tmp = n;\n        int half = 0;\n        while (tmp > 1) {\n            tmp = tmp - 2;\n            half = half + 1;\n        }\n        if (tmp == 0) {\n            n = half;\n        } else {\n            n = n + n + n + 1;\n        }\n        steps = steps + 1;\n    }\n    print_int(steps);\n    putchar('\\n');\n}\n",
+    "reference_output": "7",
+    "delivered": "7",
+    "receipt": "d6e78dc43f6ef6dcf8191059951006db1f37ba24100c0366676499f9fe56a7ff"
+   }
+  },
+  {
+   "task": "Print the number of Collatz steps for the input number to re n=34",
+   "truth": "13",
+   "reference_output": "13",
+   "program_correct": true,
+   "unverified_delivered": "13",
+   "unverified_wrong": false,
+   "agent_delivered": "13",
+   "agent_wrong": false,
+   "agent_abstained": false,
+   "attempts": 1,
+   "repairs": 0,
+   "decisions": [],
+   "receipt": "6abb4838fc051bd9",
+   "refused": null,
+   "seconds": 62,
+   "log": {
+    "task": "Print the number of Collatz steps for the input number to reach 1 (n -> n/2 if even, 3n+1 if odd).",
+    "input": "34",
+    "repairs": 0,
+    "attempts": [
+     {
+      "n_faults": 8,
+      "verdict": "PASS",
+      "output": "13",
+      "steps": 19356,
+      "first_wrong_step": null,
+      "faulty_sublayer": null,
+      "receipt": "6abb4838fc051bd94f8087d7a59bd622ef8d06842ddea729e0012ca0388ce4d4"
+     }
+    ],
+    "decisions": [],
+    "tests": [
+     {
+      "input": "1",
+      "output": "0"
+     },
+     {
+      "input": "2",
+      "output": "1"
+     },
+     {
+      "input": "3",
+      "output": "7"
+     }
+    ],
+    "self_test_fails": [],
+    "code": "void compute(const char *input) {\n    int n = parse_int(input);\n    int steps = 0;\n    int half;\n    int t;\n    while (n != 1) {\n        half = 0;\n        t = n;\n        while (t > 1) {\n            t = t - 2;\n            half = half + 1;\n        }\n        if (t == 0) {\n            n = half;\n        } else {\n            n = n + n + n + 1;\n        }\n        steps = steps + 1;\n    }\n    print_int(steps);\n    putchar('\\n');\n}\n",
+    "reference_output": "13",
+    "delivered": "13",
+    "receipt": "6abb4838fc051bd94f8087d7a59bd622ef8d06842ddea729e0012ca0388ce4d4"
+   }
+  }
+ ]
+}

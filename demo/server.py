@@ -4,7 +4,7 @@ import json, os, random, sys, time, traceback
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from referee import llama_front, protocol, tvm  # noqa: E402
+from referee import agent, llama_front, protocol, tvm  # noqa: E402
 
 GOLDEN, TOKS, T2I = tvm.load()
 NAMES = tvm.sublayer_names(len(GOLDEN.attn))
@@ -12,9 +12,9 @@ WEB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "web")
 CACHE = {}
 
 
-def build(request, inp):
+def build(request, inp, fresh=False):
     key = (request, inp)
-    if key not in CACHE:
+    if fresh or key not in CACHE:
         code, log = llama_front.write_program(request + " The input string is passed as `input`.")
         if code is None:
             raise RuntimeError("program did not compile: " + json.dumps(log)[-300:])
@@ -25,40 +25,65 @@ def build(request, inp):
     return CACHE[key]
 
 
-def run(body):
-    t0 = time.time()
-    code, pre, ref = build(body["request"], body.get("input", ""))
-    t_write = time.time() - t0
-    fault = None
-    if body.get("fault"):
-        rng = random.Random(int(body.get("seed", 1)))
-        L = len(GOLDEN.attn)
-        for _ in range(200):  # look for a fault that actually changes the trace
-            rf = {"type": rng.choice(["act", "kv"]), "pos": rng.randrange(len(pre), len(ref) - 1),
-                  "dim": rng.randrange(GOLDEN.tok.weight.shape[1]), "bit": rng.choice(range(52, 62))}
-            if rf["type"] == "act":
-                rf["sublayer"] = rng.randrange(2 * L + 1)
-            else:
-                rf["layer"], rf["which"] = rng.randrange(L), rng.choice("kv")
-            tr, R = tvm.run_prover(GOLDEN, pre, len(ref) - len(pre) + 50, runtime_fault=rf)
-            if tr != ref:
-                fault = rf
-                break
-    if fault is None:
-        tr, R = tvm.run_prover(GOLDEN, pre, len(ref) - len(pre) + 50)
-    t_run = time.time() - t0 - t_write
+def harmful_fault(pre, ref, seed):
+    rng = random.Random(seed)
+    L = len(GOLDEN.attn)
+    for _ in range(300):
+        rf = {"type": rng.choice(["act", "kv"]), "pos": rng.randrange(len(pre), len(ref) - 1),
+              "dim": rng.randrange(GOLDEN.tok.weight.shape[1]), "bit": rng.choice(range(52, 62))}
+        if rf["type"] == "act":
+            rf["sublayer"] = rng.randrange(2 * L + 1)
+        else:
+            rf["layer"], rf["which"] = rng.randrange(L), rng.choice("kv")
+        tr, R = tvm.run_prover(GOLDEN, pre, len(ref) - len(pre) + 50, runtime_fault=rf)
+        if tr != ref:
+            return rf, tr, R
+    return None, None, None
+
+
+def execute(pre, ref, tr, R, fault):
     v = protocol.referee(GOLDEN, tr, R, ref)
-    v["prover_output"] = llama_front.decode_output([TOKS[x] for x in tr])
-    v["reference_output"] = llama_front.decode_output([TOKS[x] for x in ref])
-    expl = llama_front.explain(v) if body.get("explain", True) else ""
-    return {"code": code, "steps": len(tr), "program_tokens": len(pre), "fault": fault,
-            "verdict": v["verdict"], "first_wrong_step": v.get("first_wrong_step"),
-            "faulty_sublayer": v.get("faulty_sublayer"), "origin_position": v.get("fault_origin_position"),
-            "stage": v.get("stage"), "hash_comparisons": v["hash_comparisons"],
-            "receipt": protocol.hash_chain(tr)[-1].hex(), "sublayers": NAMES,
-            "output": v["prover_output"], "reference_output": v["reference_output"],
-            "explanation": expl, "backend": llama_front.backend(),
-            "seconds": {"write": round(t_write, 1), "run": round(t_run, 1), "total": round(time.time() - t0, 1)}}
+    return {"verdict": v["verdict"], "steps": len(tr), "trace_len": len(ref),
+            "first_wrong_step": v.get("first_wrong_step"), "faulty_sublayer": v.get("faulty_sublayer"),
+            "hash_comparisons": v["hash_comparisons"], "fault": fault,
+            "output": llama_front.decode_output([TOKS[x] for x in tr]).strip(),
+            "receipt": protocol.hash_chain(tr)[-1].hex()}
+
+
+def run(body):
+    """One request = the whole loop. With fault=true the first execution is hit by a harmful bit flip;
+    the model reads the referee report and decides what to do; a clean re-run is delivered with a receipt."""
+    t0 = time.time()
+    code, pre, ref = build(body["request"], body.get("input", ""), fresh=bool(body.get("fresh")))
+    t_write = time.time() - t0
+    if len(ref) > agent.MAX_STEPS:
+        raise RuntimeError(f"program needs {len(ref):,} steps; the demo limit is {agent.MAX_STEPS:,} to keep memory bounded")
+    attempts, decisions = [], []
+    if body.get("fault"):
+        rf, tr, R = harmful_fault(pre, ref, int(body.get("seed", 1)))
+        if rf is not None:
+            att = execute(pre, ref, tr, R, rf)
+            attempts.append(att)
+            d = agent._json(llama_front.chat(agent.SYS_DECIDE, json.dumps({"task": body["request"], "self_test_failures": [],
+                "referee": {k: att[k] for k in ("verdict", "first_wrong_step", "faulty_sublayer", "steps")}}), max_tokens=4096))
+            decisions.append(d)
+            if d.get("action") != "retry":
+                return {"code": code, "attempts": attempts, "decisions": decisions, "delivered": None,
+                        "sublayers": NAMES, "seconds": {"write": round(t_write, 1), "total": round(time.time() - t0, 1)}}
+    tr, R = tvm.run_prover(GOLDEN, pre, len(ref) - len(pre) + 50)
+    att = execute(pre, ref, tr, R, None)
+    attempts.append(att)
+    first = attempts[0]
+    report = {"verdict": first["verdict"], "first_wrong_step": first["first_wrong_step"], "faulty_sublayer": first["faulty_sublayer"],
+              "trace_len": first["trace_len"], "hash_comparisons": first["hash_comparisons"],
+              "prover_output": first["output"], "reference_output": llama_front.decode_output([TOKS[x] for x in ref]).strip()}
+    if len(attempts) > 1:
+        report["after_retry"] = {"verdict": att["verdict"], "receipt": att["receipt"][:16]}
+    expl = llama_front.explain(report)
+    return {"code": code, "attempts": attempts, "decisions": decisions,
+            "delivered": att["output"] if att["verdict"] == "PASS" else None, "receipt": att["receipt"],
+            "explanation": expl, "sublayers": NAMES,
+            "seconds": {"write": round(t_write, 1), "total": round(time.time() - t0, 1)}}
 
 
 class H(BaseHTTPRequestHandler):

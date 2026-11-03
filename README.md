@@ -1,17 +1,26 @@
 # Neural Referee
 
-**Neural Computer = Compiled Layers + Neural State + Program Weights + Verifier.**
+**Catch silent data corruption inside AI computation, and say exactly where it happened.**
 
-Computers are now being compiled straight into transformer weights: a WebAssembly machine (Percepta
-transformer-vm) and a RISC-V CPU inside a 4B open model (QwenPU). Their authors check one thing: does the
-final output match. When a step goes wrong, nobody can say which step, or which part of the model did it.
+Hardware sometimes computes a wrong value without raising any error. Meta (then Facebook) studied these
+silent data corruptions and ran silent-error tests across hundreds of thousands of machines in its fleet
+("Silent Data Corruptions at Scale", Dixit et al., arXiv 2102.11245): the CPU's own error reporting does not
+catch them, and they surface later as application-level problems. As more computation moves inside models, the same question applies to the model: when a
+step goes wrong, which step, and which part of the model?
 
-Neural Referee is the verifier. You ask a question in plain language; Meta's Muse Spark 1.3 (Meta Model
-API) writes the program; the program runs inside a 7-layer transformer whose weights are a computer; the
-referee checks every step and returns either a receipt for the whole trace or the first wrong step and the
-faulty sublayer, which Muse then explains.
+Neural Referee answers that for computers that run inside transformer weights
+(**Neural Computer = Compiled Layers + Neural State + Program Weights + Verifier**). Researchers now compile
+real machines into weights (Percepta's WebAssembly transformer, QwenPU's RISC-V CPU inside a 4B open model)
+and only check the final output. Here, Meta's Muse Spark 1.3 (Meta Model API) writes the program and its own
+tests, the program runs inside a 7-layer transformer whose weights are a computer, and the referee checks
+every step: it returns a receipt for the whole trace, or the first wrong step and the faulty sublayer. Muse
+reads that verdict, re-runs or repairs, and only delivers answers that come with a passing receipt.
 
 What it measured (CPU only, reproducible from this repo):
+- **Stress test: no wrong answer delivered.** 12 tasks, every execution hit by 8 random bit flips. An
+  unchecked pipeline delivered 4 wrong answers. The Muse agent loop delivered 0 wrong: 10 correct, each
+  with a receipt, and 2 withheld because Muse could not write a working program (11 re-run decisions, all
+  "retry" after a referee FAIL). `results/agent_stress.json`
 - **Faults that weight checks cannot see.** Bit flips in activations or attention memory while the program
   runs: the referee located 30 of 30; comparing weight files located 0 of 30; an output-only check
   detected them but located none. Weight corruption: 15 of 15 here, 40 of 40 in two earlier runs.
@@ -22,8 +31,8 @@ What it measured (CPU only, reproducible from this repo):
 - **Meta models in the loop.** Muse Spark 1.3 wrote correct programs for 9 of 10 requests on the first try
   (about 12 s each). A local open-weights Llama 3.2 3B runs the same loop offline (7 of 9).
 
-What it does not claim: Muse is already accurate when it answers exact questions directly (see
-`results/muse_vs_verified.json`); the referee's value is that each answer comes with a checkable receipt
+What it does not claim: Muse was already right on 15 of 15 exact questions answered directly
+(`results/muse_vs_verified.json`); the referee's value is that each answer comes with a checkable receipt
 and that faults in the computer itself are caught and located, including ones that leave the answer
 looking right.
 
@@ -81,7 +90,23 @@ A runtime fault can corrupt a step without changing the final answer. In `result
 program printed the correct `35`, yet step 1,909 of 3,107 was computed wrongly in `L1.attn`. An
 output-only check passes this run; the referee fails it and names the step and sublayer.
 
-### 4. Meta models as the front end (`results/accuracy_muse.json`, `results/llama_accuracy.log`)
+### 4. Stress test: Muse agent loop on a faulty machine (`results/agent_stress.json`)
+Every execution on the transformer computer is hit by 8 random bit flips in activations or attention
+memory. The agent writes the program and 3 self-tests, runs, reads the referee verdict, re-runs on FAIL and
+delivers only answers with a passing receipt.
+
+| 12 tasks (letter counts, 30-digit digit sums, 20-digit sums, Collatz steps) | Wrong delivered | Correct delivered | No answer |
+|---|---|---|---|
+| Unchecked pipeline (first output) | 4 | 6 | 2 |
+| Muse agent loop with referee | **0** | 10 | 2 |
+
+21 executions in total, 11 referee FAILs, 11 "retry" decisions by Muse. One FAIL had the right printed
+answer but a wrong step inside, which only the referee could see. The 2 withheld tasks were 20-digit sums
+where Muse's program did not compile, so neither path produced an answer for them. The first run of the Collatz group used n < 1000; the model's program
+halves by repeated subtraction (division is not allowed), giving an 11.3M-step trace that exhausted RAM, so
+the group was rerun with n in 5..40 and the agent now refuses traces above 200,000 steps.
+
+### 5. Meta models as the front end (`results/accuracy_muse.json`, `results/llama_accuracy.log`)
 10 fixed plain-language requests; a program counts as correct when its output on the plain WebAssembly
 reference equals the expected output. Wrong output or compile/run errors are fed back (up to 3 rounds).
 
