@@ -168,6 +168,7 @@ PYTHONPATH=. $TVM_ROOT/.venv/bin/python experiments/llama_accuracy.py
 - `demo/run_demo.py` - request -> program -> neural computer -> referee -> explanation (CLI)
 - `demo/server.py`, `demo/web/index.html` - one-page web demo
 - `demo/record_video.py` - records the 3-minute demo video from the web demo
+- `demo/record_video_slide.py` - records the demo video with the slide-style title cards (white, big bold headline, blue highlight); `demo/_run_slide_video.py` runs it end to end
 - `experiments/h_r.py` - the H-R test
 - `experiments/baseline_table.py` - referee vs baselines on weight, compute and memory faults
 - `experiments/llama_accuracy.py` - program-writing accuracy of the Meta model front end

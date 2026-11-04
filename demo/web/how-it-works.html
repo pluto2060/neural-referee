@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Neural Referee: how it works</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;width:1800px;background:#F1F4F7;color:#1C2B33;font:17px/1.45 "Optimistic Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;padding:36px 44px}
+h1{font-size:34px;margin:0}
+.sub{color:#465A69;font-size:19px;margin:6px 0 22px}
+.formula{display:inline-block;background:#fff;border:1px solid #DEE3E9;border-radius:10px;padding:6px 14px;font:15px ui-monospace,Menlo,monospace;margin-left:10px;vertical-align:middle}
+.formula b{color:#0866FF}
+.row{display:grid;grid-template-columns:290px 40px 420px 40px 1fr 40px 300px;align-items:stretch}
+.card{background:#fff;border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.05);padding:18px 20px;transition:opacity .4s, box-shadow .4s, transform .4s}
+.n{display:inline-block;width:30px;height:30px;border-radius:50%;background:#0866FF;color:#fff;font-weight:800;text-align:center;line-height:30px;margin-right:8px}
+.t{font-weight:800;font-size:21px}
+.k{color:#465A69;font-size:15px;margin-top:2px}
+.arrow{display:flex;align-items:center;justify-content:center;color:#0866FF;font-size:34px;font-weight:800;transition:opacity .4s}
+.box{border:1px solid #DEE3E9;border-radius:10px;padding:9px 12px;margin-top:10px;background:#F8FAFB;font-size:15.5px}
+.mono{font:14px ui-monospace,Menlo,monospace}
+.layers{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-top:8px}
+.layers span{font:10.5px ui-monospace,monospace;text-align:center;padding:5px 0;border-radius:5px;border:1px solid #DEE3E9;background:#fff;color:#465A69}
+.layers span.bad{background:#C62828;border-color:#C62828;color:#fff;font-weight:700}
+.fault{background:#FDECEA;border:1px dashed #C62828;color:#C62828;border-radius:10px;padding:8px 12px;margin-top:10px;font-weight:700;font-size:15px}
+.ref{display:grid;gap:10px}
+.step{display:grid;grid-template-columns:150px 1fr;gap:12px;align-items:start;border:1px solid #DEE3E9;border-radius:12px;padding:12px 14px;background:#fff;transition:opacity .4s, border-color .4s}
+.step .h{font-weight:800;color:#0457CB}
+.chain{display:flex;gap:3px;margin-top:6px}
+.chain i{flex:1;height:16px;border-radius:3px;background:#1A7F37;opacity:.85}
+.chain i.x{background:#C62828}
+.chain i.p{outline:2px solid #0866FF;outline-offset:1px}
+.bis{font:13px ui-monospace,monospace;color:#465A69;margin-top:4px}
+.verdict{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+.pass{background:#E6F4EA;border-radius:10px;padding:10px 12px}
+.fail{background:#FDECEA;border-radius:10px;padding:10px 12px}
+.pass b{color:#1A7F37}.fail b{color:#C62828}
+.loop{margin-top:22px;display:grid;grid-template-columns:1.25fr 1fr;gap:18px}
+.why{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
+.why div{background:#F8FAFB;border:1px solid #DEE3E9;border-radius:10px;padding:10px 12px;font-size:15px}
+.why b{display:block;font-size:22px;color:#0866FF}
+.dec{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.dec span{border-radius:999px;padding:5px 12px;font-weight:800;font-size:14px}
+.retry{background:#E7F0FF;color:#0457CB}.repair{background:#FFF4CE;color:#7A5A00}.give{background:#EEF1F4;color:#465A69}
+.back{margin-top:12px;text-align:center;color:#0866FF;font-weight:800;font-size:15px}
+.foot{margin-top:18px;color:#465A69;font-size:14px}
+body.focus .card[data-s], body.focus .arrow{opacity:.28}
+body.focus .card.on{opacity:1;box-shadow:0 0 0 3px #0866FF,0 8px 28px rgba(8,102,255,.18);transform:translateY(-2px)}
+body.sub3 .step{opacity:.3}
+body.sub3 .step.on{opacity:1;border-color:#0866FF;box-shadow:0 0 0 2px #0866FF}
+body.video .loop, body.video .foot{display:none}
+</style></head><body>
+
+<h1>Neural Referee: how it works <span class="formula">Neural Computer = Compiled Layers + Neural State + Program Weights + <b>Verifier</b></span></h1>
+<div class="sub">When a computer running inside model weights computes something wrong, find <b>which step</b> and <b>which sublayer</b> went wrong, and deliver only answers that pass, with a receipt.</div>
+
+<div class="row">
+  <div class="card" data-s="1">
+    <div class="t"><span class="n">1</span>Write the program</div>
+    <div class="k">Meta AI model (Meta Model API)</div>
+    <div class="box">User request<br><b>"Print the sum of the decimal digits of the input"</b><br>input 98765</div>
+    <div class="box">The model writes a C program and its own tests<br>-> compiled to WebAssembly<br>-> build errors and wrong outputs go back to the model</div>
+  </div>
+  <div class="arrow">&#10140;</div>
+  <div class="card" data-s="2">
+    <div class="t"><span class="n">2</span>Run inside the weights</div>
+    <div class="k">transformer-vm: a 7-layer transformer whose weights are computed, not trained</div>
+    <div class="box">1 token = 1 byte of machine state, 1 step = 1 generated token<br>Execution trace <span class="mono">t1, t2, ..., tN</span> (here N = 3,107)</div>
+    <div class="box">16 sublayers inside every step
+      <div class="layers"><span>embed</span><span>L0.attn</span><span>L0.ffn</span><span>L1.attn</span><span>L1.ffn</span><span class="bad">L2.attn</span><span>L2.ffn</span><span>L3.attn</span><span>L3.ffn</span><span>L4.attn</span><span>L4.ffn</span><span>L5.attn</span><span>L5.ffn</span><span>L6.attn</span><span>L6.ffn</span><span>head</span></div>
+    </div>
+    <div class="fault">&#9889; Hardware fault (silent data corruption): one bit of an activation or of attention memory flips during the run. The weight file is unchanged.</div>
+  </div>
+  <div class="arrow">&#10140;</div>
+  <div class="card ref" data-s="3">
+    <div><div class="t"><span class="n">3</span>Referee</div><div class="k">Compares against a reference run with the golden weights, without re-running everything</div></div>
+    <div class="step" data-p="3a"><div class="h">3a. Hash-chain<br>bisection</div>
+      <div>Each step extends a running hash <span class="mono">h<sub>i</sub> = H(h<sub>i-1</sub>, t<sub>i</sub>)</span>. Compare with the reference, halve the range each time, and find the <b>first step that differs</b>.
+        <div class="chain"><i></i><i></i><i></i><i></i><i></i><i></i><i class="p"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i></div>
+        <div class="bis">about log2(N) comparisons: 3,107 steps -> 12 comparisons -> step 1,542</div></div></div>
+    <div class="step" data-p="3b"><div class="h">3b. Recheck one<br>step by sublayer</div>
+      <div>Recompute only that step with the golden weights and compare the 16 sublayer outputs in order -> <b>first sublayer that disagrees</b> (here L2.attn). About 0.03% of the run is recomputed.</div></div>
+    <div class="step" data-p="3c"><div class="h">3c. Scan earlier<br>positions</div>
+      <div>If that step computes correctly, the fault came in earlier through attention memory -> recheck earlier positions with the same arithmetic to find <b>where it started</b> (needed in 7 of 40 cases).</div></div>
+    <div class="verdict">
+      <div class="pass"><b>PASS</b> every step matches -> the final hash is the <b>receipt</b></div>
+      <div class="fail"><b>FAIL</b> first wrong step + faulty sublayer (+ origin)</div>
+    </div>
+  </div>
+  <div class="arrow">&#10140;</div>
+  <div class="card" data-s="4">
+    <div class="t"><span class="n">4</span>Read the verdict, decide</div>
+    <div class="k">The Meta AI model acts as the agent</div>
+    <div class="box">Self-tests passed but L2.attn failed -> not a program bug, a transient hardware fault</div>
+    <div class="dec"><span class="retry">RETRY run again</span><span class="repair">REPAIR fix the program</span><span class="give">GIVE UP withhold</span></div>
+    <div class="box" style="background:#E6F4EA;border-color:#B7DFC2"><b>Delivered answer: 35</b><br>The re-run passed every step -> delivered with receipt <span class="mono">723d064a...</span><br>No PASS, no answer</div>
+    <div class="back">&#8634; on FAIL, go back to step 2</div>
+  </div>
+</div>
+
+<div class="loop">
+  <div class="card">
+    <div class="t">Why this way: compared with other checks (measured on CPU)</div>
+    <div class="why">
+      <div><b>45/45</b>faults located<br><span class="k">output check alone: 0/45</span></div>
+      <div><b>30/30</b>faults during the run located<br><span class="k">weight-file diff: 0/30 (weights never changed)</span></div>
+      <div><b>4 -> 0</b>wrong answers under faults<br><span class="k">12 tasks, 8 bit flips per run</span></div>
+      <div><b>15-19%</b>cost of checking<br><span class="k">of run time; a full re-run is 100%</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="t">The principle in three lines</div>
+    <div class="box"><b>1.</b> Chain the execution into hashes, and "where did it diverge" takes log N comparisons.</div>
+    <div class="box"><b>2.</b> A computer in weights is deterministic, so recomputing one step with golden weights exposes the faulty sublayer.</div>
+    <div class="box"><b>3.</b> Deliver only answers with a PASS receipt: a fault becomes a re-run or a withheld answer, never a wrong answer.</div>
+  </div>
+</div>
+<div class="foot">Numbers: neural-referee/results (baseline_table.json, h_r*.json, agent_stress.json, demo_fault_harmful.json). The bisection follows Verde (2025), applied here to a neural computer for the first time. Measured on one 7-layer transformer-vm.</div>
+<script>
+const q = new URLSearchParams(location.search), s = q.get('s');
+if (q.get('v')) document.body.classList.add('video');
+if (s) {
+  document.body.classList.add('focus');
+  document.querySelector(`.card[data-s="${s[0]}"]`).classList.add('on');
+  if (s.length > 1) { document.body.classList.add('sub3'); document.querySelector(`.step[data-p="${s}"]`).classList.add('on'); }
+}
+</script>
+</body></html>
