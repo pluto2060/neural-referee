@@ -2,6 +2,8 @@
 
 **Catch silent data corruption inside AI computation, and say exactly where it happened.**
 
+![One run of the demo: a bit flip makes the first run fail at step 1,542 in sublayer L2.attn; the Meta model decides to re-run; the re-run passes and 35 is delivered with a receipt](docs/hero.png)
+
 Hardware sometimes computes a wrong value without raising any error. Meta (then Facebook) studied these
 silent data corruptions and ran silent-error tests across hundreds of thousands of machines in its fleet
 ("Silent Data Corruptions at Scale", Dixit et al., arXiv 2102.11245): the CPU's own error reporting does not
